@@ -23,6 +23,128 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ================================================
+     1B. HERO CARD STACK → FAN OUT — The 3 floating
+         glass cards (ANIME / MINIMAL / GRAPHIC) start
+         overlapped in one stack, then animate out to
+         their resting positions once on page load.
+         Desktop only (cards are hidden on mobile via
+         responsive.css, so this safely does nothing there).
+  ================================================ */
+  const heroCards = document.querySelectorAll('.hero-float-card');
+
+  if (heroCards.length > 1) {
+    const cardsArr = Array.from(heroCards);
+
+    // Respect users who prefer reduced motion — skip straight to final state.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+      // Pull out any floating animation classes FIRST — they'll be
+      // re-applied once the fan-out settles. Doing this before we
+      // measure positions matters: otherwise the ambient float
+      // animation (mid-cycle) would throw off the measurements below.
+      cardsArr.forEach(function (card) {
+        card.dataset.floatClass = '';
+        ['animate-float', 'animate-float-delayed', 'animate-float-slow'].forEach(function (cls) {
+          if (card.classList.contains(cls)) {
+            card.dataset.floatClass = cls;
+            card.classList.remove(cls);
+          }
+        });
+      });
+
+      // Now measure each card's natural resting position.
+      const rects = cardsArr.map(function (card) {
+        return card.getBoundingClientRect();
+      });
+
+      // Stack point = the middle card's center (visually the "top of the deck").
+      const stackRect    = rects[Math.floor(rects.length / 2)];
+      const stackCenterX = stackRect.left + stackRect.width / 2;
+      const stackCenterY = stackRect.top + stackRect.height / 2;
+
+      cardsArr.forEach(function (card, i) {
+        const r  = rects[i];
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+
+        // Offset needed to move THIS card on top of the stack point.
+        const dx = stackCenterX - cx;
+        const dy = stackCenterY - cy;
+
+        // Slight rotation variance so the stack reads as a deck of cards.
+        const rotation = (i - Math.floor(rects.length / 2)) * 7;
+
+        card.style.setProperty('--stack-x', dx.toFixed(1) + 'px');
+        card.style.setProperty('--stack-y', dy.toFixed(1) + 'px');
+        card.style.setProperty('--stack-rot', rotation + 'deg');
+        card.style.setProperty('--stack-delay', (i * 0.14).toFixed(2) + 's');
+
+        card.classList.add('card-stack-init');
+      });
+
+      // Force the stacked state to paint, then trigger the fan-out transition.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          cardsArr.forEach(function (card) {
+            card.classList.add('card-stack-fan');
+          });
+        });
+      });
+
+      // Once the fan-out finishes, hand off to the ambient floating animation.
+      const longestDelay    = (cardsArr.length - 1) * 0.14;
+      const settleTime      = (longestDelay + 1.05) * 1000 + 80; // ms, small buffer
+      setTimeout(function () {
+        cardsArr.forEach(function (card) {
+          card.classList.remove('card-stack-init', 'card-stack-fan');
+          if (card.dataset.floatClass) {
+            card.classList.add(card.dataset.floatClass);
+          }
+        });
+      }, settleTime);
+    }
+  }
+
+  /* ================================================
+     1C. HERO CARD PRODUCT DECK — Opens the fanned-out
+         product deck on hover/focus, with a short grace
+         period before closing. Plain CSS :hover would
+         drop out the instant the cursor crosses the gap
+         between the card and the deck below it, making
+         the products impossible to click; this timer
+         bridges that gap.
+  ================================================ */
+  document.querySelectorAll('.hero-float-card').forEach(function (card) {
+    let closeTimer = null;
+
+    function openDeck() {
+      clearTimeout(closeTimer);
+      card.classList.add('deck-open');
+    }
+
+    function scheduleClose() {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(function () {
+        card.classList.remove('deck-open');
+      }, 300); // grace period — enough time to cross the gap to the deck
+    }
+
+    card.addEventListener('mouseenter', openDeck);
+    card.addEventListener('mouseleave', scheduleClose);
+
+    // Keyboard users: :focus-within in CSS already handles the visual
+    // state, but we mirror it here too so animation-play-state / z-index
+    // stay in sync if focus moves in via JS-driven navigation.
+    card.addEventListener('focusin', openDeck);
+    card.addEventListener('focusout', function (e) {
+      if (!card.contains(e.relatedTarget)) {
+        scheduleClose();
+      }
+    });
+  });
+
+  /* ================================================
      2. ACTIVE NAV LINK — Highlights the current
         page link in the navigation bar.
   ================================================ */
