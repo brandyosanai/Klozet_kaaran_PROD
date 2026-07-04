@@ -1,0 +1,185 @@
+/* =====================================================
+   KLOZET KAARAN — Responsive Stylesheet
+   Breakpoints follow Bootstrap 5:
+     xs < 576px | sm >= 576 | md >= 768 | lg >= 992 | xl >= 1200
+   ===================================================== */
+
+/* ─── Tablet & down (< 992px) ─── */
+@media (max-width: 991.98px) {
+  :root {
+    --margin-desktop: 40px;
+    --section-gap:    80px;
+  }
+
+  /* Navigation */
+  #main-nav {
+    padding: 1rem var(--margin-mobile);
+  }
+  #main-nav.scrolled {
+    padding: 0.75rem var(--margin-mobile);
+  }
+
+  /* Hero */
+  .hero-section { height: auto; min-height: 100svh; }
+  .hero-headline { font-size: clamp(48px, 12vw, 80px); }
+  .hero-image-wrap {
+    width: 100%;
+    opacity: 0.35;
+    position: absolute;
+  }
+  .hero-image-fade {
+    background: linear-gradient(to top, var(--color-background) 0%, transparent 70%);
+  }
+  .hero-float-card { display: none; }
+  .scroll-indicator { display: none !important; }
+
+  /* Sections */
+  .px-site {
+    padding-left: var(--margin-mobile);
+    padding-right: var(--margin-mobile);
+  }
+
+  /* Brand story */
+  .brand-gsm-card {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: 1.5rem;
+    display: inline-block;
+  }
+
+  /* Features grid */
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  .feature-item { padding: 2.5rem 2rem; }
+
+  /* Instagram grid */
+  .insta-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: 4rem var(--margin-mobile);
+  }
+
+  /* Side social: hide on tablet */
+  .side-social { display: none; }
+
+  /* Product slider */
+  .product-slider {
+    padding-left: var(--margin-mobile);
+    padding-right: var(--margin-mobile);
+  }
+
+  /* Page header */
+  .page-header {
+    padding-left: var(--margin-mobile);
+    padding-right: var(--margin-mobile);
+  }
+
+  /* Drop banner title */
+  .drop-title {
+    font-size: clamp(60px, 15vw, 120px);
+  }
+
+  /* Collection card content */
+  .collection-card-content { left: 1.5rem; bottom: 1.5rem; }
+
+  /* Filter sidebar becomes stacked */
+  .filter-sidebar { position: static; margin-bottom: 3rem; }
+
+  /* Contact form panel */
+  .contact-form-panel { padding: 2rem; }
+  .contact-form-glow { display: none; }
+}
+
+/* ─── Mobile (< 768px) ─── */
+@media (max-width: 767.98px) {
+  :root {
+    --margin-desktop: 20px;
+    --section-gap:    60px;
+  }
+
+  /* Hero text */
+  .hero-headline { font-size: clamp(42px, 14vw, 72px); }
+  .hero-section .d-flex.gap-3 {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn-kk-primary,
+  .btn-kk-outline { width: 100%; text-align: center; }
+
+  /* Section headline */
+  .section-headline { font-size: clamp(32px, 9vw, 60px); }
+
+  /* Features */
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-item  { padding: 2rem 1.5rem; }
+
+  /* Instagram: 2 col on phone */
+  .insta-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Footer flex wrap */
+  .footer-logo-col { margin-bottom: 2.5rem; }
+
+  /* Blog grid single col */
+  .blog-grid-col { flex: 0 0 100%; max-width: 100%; }
+
+  /* Drop banner */
+  .drop-banner { height: 60vh; }
+  .drop-title { font-size: clamp(50px, 20vw, 90px); letter-spacing: 0.05em; }
+  .btn-kk-primary { padding: 1rem 2rem; }
+
+  /* Page header */
+  .page-header { padding-top: calc(56px + 2rem); }
+  .page-header-title { font-size: clamp(40px, 12vw, 60px); }
+
+  /* Slider product card min-width */
+  .product-card { min-width: 280px; }
+
+  /* Contact */
+  .contact-highlight { padding: 1.25rem 1.5rem; }
+  .contact-form-panel { padding: 1.5rem 1rem; }
+
+  /* Nav */
+  #main-nav { padding: 1rem; }
+}
+
+/* ─── Small phones (< 400px) ─── */
+@media (max-width: 399.98px) {
+  .hero-headline { font-size: 40px; }
+  .drop-title { font-size: 52px; }
+  .page-header-title { font-size: 38px; }
+  .insta-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ─── Wide desktop (>= 1400px) ─── */
+@media (min-width: 1400px) {
+  .hero-headline { font-size: 110px; }
+  .section-headline { font-size: 90px; }
+  .product-card { min-width: 460px; }
+  .insta-grid { grid-template-columns: repeat(6, 1fr); }
+}
+
+/* ─── Motion sensitivity ─── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-float-slow {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  * { transition-duration: 0.01ms !important; }
+}
+
+/* ─── Focus visible (keyboard accessibility) ─── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}

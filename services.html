@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KLOZET KAARAN Collections – browse our premium 240 GSM oversized tees, anime graphics, minimal drops, and urban essentials." />
+  <title>Collections | KLOZET KAARAN</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;700;800;900&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
+  <div id="scrollProgress" style="position:fixed;top:0;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav id="main-nav" class="navbar navbar-expand-lg scrolled" aria-label="Main navigation">
+    <div class="container-fluid d-flex align-items-center justify-content-between" style="padding:0;">
+      <a class="navbar-brand" href="index.html">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPTaRPJReZf21KCp-af8VZRgG7jRiMx3CKcE7irFjusTgXIamehQH85txxLmrIk1v5xtkuSt__Y1-3oJrq-BarL5-q1-BaHmu48P0wYP_IJNgWLmkAmQPkCSHvMC6hE-DmPYGOTZE_VWIXoB4qRFMXJqgzXgSJiOklBhMygJFwelEf5-PzgF9G1uqxEwtfopIYqqFFH0wX7_Tt1x9PpcqIhFGo7_1Uosu51O06ssKPg8bcVJ6L4T1f1QGctUuB5czaW7vF3S8OlAM"
+             alt="KLOZET KAARAN" style="height:48px;width:auto;filter:brightness(0) invert(1);" />
+      </a>
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="material-symbols-outlined" style="color:#fff;font-size:28px;">menu</span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mx-auto gap-lg-4" id="navbarNav">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="services.html" style="color:#fff!important;">Collections</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <a href="https://wa.me/yournumber" class="d-none d-md-flex align-items-center gap-2 text-decoration-none" style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);">
+          WhatsApp Us <span class="material-symbols-outlined" style="color:#f58220;font-size:20px;">chat</span>
+        </a>
+        <button style="background:none;border:none;color:#fff;cursor:pointer;" aria-label="Cart">
+          <span class="material-symbols-outlined" style="font-size:24px;">shopping_cart</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <aside class="side-social d-none d-xl-flex" aria-label="Social links">
+    <span class="vertical-text">Exclusive Drops</span>
+    <a href="https://instagram.com/klozetkaaran" target="_blank" rel="noopener" aria-label="Instagram">
+      <span class="material-symbols-outlined" style="font-size:22px;">photo_camera</span><span>IG</span>
+    </a>
+    <a href="https://wa.me/yournumber" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <span class="material-symbols-outlined" style="font-size:22px;">chat</span><span>WA</span>
+    </a>
+  </aside>
+
+  <main>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <h1 class="page-header-title reveal">COLLECTIONS</h1>
+      <div class="page-header-divider reveal" style="transition-delay:0.15s;">
+        <div class="bar"></div>
+        <p>URBAN ESSENTIALS. OVERSIZED FIT.</p>
+      </div>
+    </div>
+
+    <!-- ═══ FILTER + GRID ═══ -->
+    <section class="section-gap" style="background:var(--color-background);">
+      <div class="container-fluid px-site">
+        <div class="row g-5">
+
+          <!-- ── Filter Sidebar ── -->
+          <div class="col-lg-3">
+            <aside class="filter-sidebar glass-card p-4" aria-label="Product filters">
+
+              <!-- Category filter -->
+              <div class="mb-5">
+                <p class="filter-section-title">Category</p>
+                <label class="filter-label">
+                  <input type="checkbox" /> Men
+                </label>
+                <label class="filter-label">
+                  <input type="checkbox" /> Women
+                </label>
+                <label class="filter-label">
+                  <input type="checkbox" checked /> Unisex
+                </label>
+              </div>
+
+              <!-- Collection filter -->
+              <div class="mb-5">
+                <p class="filter-section-title">Collection</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="filter-chip-btn active">Anime</button>
+                  <button class="filter-chip-btn">Graphic</button>
+                  <button class="filter-chip-btn">Minimal</button>
+                  <button class="filter-chip-btn">Vintage</button>
+                  <button class="filter-chip-btn">Archive</button>
+                </div>
+              </div>
+
+              <!-- Price filter -->
+              <div class="mb-5">
+                <p class="filter-section-title">Price Range</p>
+                <label class="filter-label">
+                  <input type="checkbox" /> Under ₹1,500
+                </label>
+                <label class="filter-label">
+                  <input type="checkbox" checked /> ₹1,500 – ₹2,000
+                </label>
+                <label class="filter-label">
+                  <input type="checkbox" /> Above ₹2,000
+                </label>
+              </div>
+
+              <!-- Size filter -->
+              <div>
+                <p class="filter-section-title">Size</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <button class="filter-chip-btn">S</button>
+                  <button class="filter-chip-btn active">M</button>
+                  <button class="filter-chip-btn">L</button>
+                  <button class="filter-chip-btn">XL</button>
+                  <button class="filter-chip-btn">XXL</button>
+                </div>
+              </div>
+
+            </aside>
+          </div>
+
+          <!-- ── Products Grid ── -->
+          <div class="col-lg-9">
+
+            <!-- Sort row -->
+            <div class="d-flex justify-content-between align-items-center mb-4 reveal">
+              <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin:0;">
+                Showing <span style="color:#f58220;">12</span> products
+              </p>
+              <select style="background:var(--color-surface);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:0.5rem 1rem;font-family:var(--font-body);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;outline:none;" aria-label="Sort products">
+                <option>LATEST DROPS</option>
+                <option>PRICE: LOW–HIGH</option>
+                <option>PRICE: HIGH–LOW</option>
+                <option>BEST SELLERS</option>
+              </select>
+            </div>
+
+            <!-- Product grid: 3 columns -->
+            <div class="row g-4 stagger-parent">
+
+              <!-- Product 1 -->
+             <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <a href="product-detail.html?product=urban-zen" class="text-decoration-none">
+                    <div class="product-card-image orange-glow-hover">
+                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Urban Zen Tee" loading="lazy" />
+                      <div class="product-badge glass-card">240 GSM</div>
+                      
+                      <div class="product-card-hover-btn">
+                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+                  
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=urban-zen" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color: #fff; margin-bottom: 0;">URBAN ZEN TEE</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,499</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 2 -->
+              <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <div class="product-card-image orange-glow-hover">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ"
+                         alt="Neon Drift Tee" loading="lazy" />
+                    <div class="product-badge glass-card">LIMITED</div>
+                    <div class="product-card-hover-btn">
+                      <a href="https://wa.me/yournumber" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%;font-size:11px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">chat</span> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div><p class="product-card-name" style="font-size:1rem;">NEON DRIFT TEE</p><p class="product-card-sub">Unisex • Oversized</p></div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,899</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 3 -->
+              <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <div class="product-card-image orange-glow-hover">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs"
+                         alt="Vintage Graphic Tee" loading="lazy" />
+                    <div class="product-badge glass-card">240 GSM</div>
+                    <div class="product-card-hover-btn">
+                      <a href="https://wa.me/yournumber" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%;font-size:11px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">chat</span> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div><p class="product-card-name" style="font-size:1rem;">VINTAGE GRAPHIC</p><p class="product-card-sub">Men • Oversized</p></div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,799</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 4 -->
+              <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <div class="product-card-image orange-glow-hover">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8"
+                         alt="Zenith Oversized Tee" loading="lazy" />
+                    <div class="product-badge glass-card">NEW</div>
+                    <div class="product-card-hover-btn">
+                      <a href="https://wa.me/yournumber" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%;font-size:11px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">chat</span> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div><p class="product-card-name" style="font-size:1rem;">ZENITH OVERSIZED</p><p class="product-card-sub">Unisex • Oversized</p></div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,699</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 5 -->
+              <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <div class="product-card-image orange-glow-hover">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0"
+                         alt="Vortex Wash Tee" loading="lazy" />
+                    <div class="product-badge glass-card">240 GSM</div>
+                    <div class="product-card-hover-btn">
+                      <a href="https://wa.me/yournumber" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%;font-size:11px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">chat</span> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div><p class="product-card-name" style="font-size:1rem;">VORTEX WASH</p><p class="product-card-sub">Men • Oversized</p></div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,849</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product 6 -->
+              <div class="col-sm-6 col-xl-4">
+                <div class="product-card" style="min-width:0;">
+                  <div class="product-card-image orange-glow-hover">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I"
+                         alt="Ignition Tee" loading="lazy" />
+                    <div class="product-badge glass-card">HOT</div>
+                    <div class="product-card-hover-btn">
+                      <a href="https://wa.me/yournumber" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%;font-size:11px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">chat</span> Order on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div><p class="product-card-name" style="font-size:1rem;">IGNITION TEE</p><p class="product-card-sub">Unisex • Oversized</p></div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,949</span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end product grid row -->
+
+            <!-- Load more -->
+            <div class="text-center mt-5">
+              <button class="btn-kk-outline">Load More Drops</button>
+            </div>
+
+          </div><!-- end col products -->
+        </div><!-- end row -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="site-footer" aria-label="Site footer">
+    <div class="row g-5">
+      <div class="col-lg-5 footer-logo-col">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPTaRPJReZf21KCp-af8VZRgG7jRiMx3CKcE7irFjusTgXIamehQH85txxLmrIk1v5xtkuSt__Y1-3oJrq-BarL5-q1-BaHmu48P0wYP_IJNgWLmkAmQPkCSHvMC6hE-DmPYGOTZE_VWIXoB4qRFMXJqgzXgSJiOklBhMygJFwelEf5-PzgF9G1uqxEwtfopIYqqFFH0wX7_Tt1x9PpcqIhFGo7_1Uosu51O06ssKPg8bcVJ6L4T1f1QGctUuB5czaW7vF3S8OlAM"
+             alt="Klozet Kaaran" style="height:56px;width:auto;filter:brightness(0) invert(1);margin-bottom:2rem;display:block;" />
+        <p style="color:rgba(255,255,255,0.4);max-width:400px;margin-bottom:2rem;line-height:1.7;">Raw urban energy meets high-end tailoring. The uniform for the digital generation.</p>
+        <form class="d-flex gap-2 newsletter-form">
+          <input type="email" class="footer-email-input" placeholder="ENTER EMAIL" required />
+          <button type="submit" class="btn-kk-primary" style="padding:1rem 1.5rem;">SUB</button>
+        </form>
+      </div>
+      <div class="col-6 col-lg-2 offset-lg-1">
+        <p class="footer-nav-title">SHOP</p>
+        <nav class="footer-nav">
+          <a href="services.html">New Arrivals</a>
+          <a href="services.html">Best Sellers</a>
+          <a href="services.html">Oversized Drop</a>
+          <a href="services.html">Archive</a>
+        </nav>
+      </div>
+      <div class="col-6 col-lg-2">
+        <p class="footer-nav-title">SUPPORT</p>
+        <nav class="footer-nav">
+          <a href="contact.html">Shipping</a>
+          <a href="contact.html">Returns</a>
+          <a href="about.html">Size Guide</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </div>
+    <div class="footer-bottom d-flex flex-md-row flex-column justify-content-between align-items-center gap-3">
+      <p class="footer-copy mb-0">© 2024 KLOZET KAARAN. ENGINEERED FOR THE CULTURE.</p>
+      <div class="d-flex gap-4">
+        <a href="#" class="footer-copy" style="text-decoration:none;">Privacy</a>
+        <a href="#" class="footer-copy" style="text-decoration:none;">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/yournumber" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="material-symbols-outlined" style="font-size:26px;">chat</span>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/gsap.js"></script>
+</body>
+</html>

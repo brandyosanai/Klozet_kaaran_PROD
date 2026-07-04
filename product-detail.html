@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details | KLOZET KAARAN</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@600;800;900&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <style>
+    .product-main-img { width: 100%; height: auto; background: var(--color-surface); object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
+    .thumb-img { width: 100%; height: 80px; object-fit: cover; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+    .thumb-img.active, .thumb-img:hover { opacity: 1; border-color: var(--color-primary); }
+    .size-btn { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); font-weight: 600; padding: 0.5rem 1.25rem; transition: all 0.2s; }
+    .size-btn.active, .size-btn:hover { background: #fff; color: #000; border-color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
+
+  <main class="container py-5" style="margin-top: 100px;">
+    <a href="services.html" class="text-decoration-none text-muted d-inline-flex align-items-center gap-2 mb-4">
+      <span class="material-symbols-outlined">arrow_back</span> BACK TO COLLECTIONS
+    </a>
+
+    <div class="row g-5">
+      <div class="col-md-6">
+        <img id="mainProductImage" src="" alt="Product view" class="product-main-img mb-3" />
+        <div class="row g-2" id="thumbnailRow">
+          </div>
+      </div>
+
+      <div class="col-md-6 d-flex flex-column justify-content-between">
+        <div>
+          <span class="text-uppercase tracking-widest text-muted small" id="productCategory">DROP COLLECTION</span>
+          <h1 class="display-5 font-headline fw-black text-uppercase mt-1 mb-2" id="productTitle">LOADING...</h1>
+          <h2 class="h3 text-primary fw-bold mb-4" id="productPrice">₹0.00</h2>
+          
+          <p class="text-secondary mb-4" style="line-height: 1.7;" id="productDesc">Loading details...</p>
+
+          <div class="mb-5">
+            <p class="fw-bold tracking-widest small mb-2">SELECT SIZE</p>
+            <div class="d-flex gap-2" id="sizeContainer">
+              <button class="size-btn active">M</button>
+              <button class="size-btn">L</button>
+              <button class="size-btn">XL</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <a id="orderWhatsAppBtn" href="#" target="_blank" class="btn btn-kk-primary w-100 py-3 text-center d-flex align-items-center justify-content-center gap-2 fw-bold text-uppercase tracking-widest" style="background: var(--color-primary); color:#000; border:none; text-decoration:none;">
+            PLACE ORDER VIA WHATSAPP <span class="material-symbols-outlined">bolt</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 1. Mock Database - Populate this with your real product paths and metadata
+    const productsDb = {
+      "heavyweight-tee": {
+        title: "240 GSM OVERSIZED HEAVYWEIGHT TEE",
+        price: "₹1,499",
+        category: "RAW ESSENTIALS",
+        desc: "Engineered for pure street style culture. Crafted from heavy-gauge 240 GSM pure cotton loopback fabric. Relaxed drop-shoulder fit with structured neckline that stays shape-locked.",
+        images: ["assets/images/product-front.jpg", "assets/images/product-back.jpg"]
+      },
+      "anime-drop": {
+        title: "NEO-TOKYO ANIME OVERSIZED TEE",
+        price: "₹1,699",
+        category: "LIMITED DROPS",
+        desc: "Bold high-definition screen print styling across panels. High durability graphics constructed to withstand raw daily wear.",
+        images: ["assets/images/anime-front.jpg", "assets/images/anime-back.jpg"]
+      }
+    };
+
+    // 2. Parse URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('product') || 'heavyweight-tee'; 
+    const product = productsDb[productId];
+
+    if (product) {
+      document.getElementById('productTitle').innerText = product.title;
+      document.getElementById('productPrice').innerText = product.price;
+      document.getElementById('productCategory').innerText = product.category;
+      document.getElementById('productDesc').innerText = product.desc;
+      
+      // Set main image
+      const mainImg = document.getElementById('mainProductImage');
+      mainImg.src = product.images[0];
+
+      // Build Thumbnails
+      const thumbRow = document.getElementById('thumbnailRow');
+      product.images.forEach((imgSrc, index) => {
+        const col = document.createElement('div');
+        col.className = 'col-3';
+        col.innerHTML = `<img src="${imgSrc}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeImage(this)" />`;
+        thumbRow.appendChild(col);
+      });
+
+      // Size handling
+      let selectedSize = 'M';
+      const sizeButtons = document.querySelectorAll('#sizeContainer .size-btn');
+      sizeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedSize = btn.innerText;
+          updateWhatsAppLink(product.title, selectedSize);
+        });
+      });
+
+      // WhatsApp Dynamic Setup
+      function updateWhatsAppLink(title, size) {
+        const phone = "91XXXXXXXXXX"; // Replace with your WhatsApp number
+        const message = `Hey KLOZET KAARAN, I want to order:\n\nProduct: ${title}\nSize: ${size}\n\nPlease confirm availability!`;
+        document.getElementById('orderWhatsAppBtn').href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      }
+      updateWhatsAppLink(product.title, selectedSize);
+    }
+
+    // Thumbnail swap handler
+    function changeImage(element) {
+      document.getElementById('mainProductImage').src = element.src;
+      document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+      element.classList.add('active');
+    }
+  </script>
+
+  <script src="assets/js/gsap.js"></script>
+</body>
+</html>
