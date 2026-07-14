@@ -374,3 +374,67 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 }); // end DOMContentLoaded
+/* ================================================
+     13. AUTOMATIC INSTAGRAM FEED — Klozet Kaaran Engine
+  ================================================ */
+  async function autoUpdateInstagramGrid() {
+    const targetGrid = document.getElementById('live-instagram-grid');
+    if (!targetGrid) return;
+
+    // Your live Behold JSON feed URL
+    const AUTOMATED_FEED_URL = 'https://feeds.behold.so/Hbr4VLvuemYaqFTgbLB6';
+
+    try {
+      const response = await fetch(AUTOMATED_FEED_URL);
+      if (!response.ok) throw new Error('Behold API Sync issue');
+      
+      const jsonOutput = await response.json();
+      // Behold passes items under a native 'posts' array property
+      const postsData = jsonOutput.posts || []; 
+      
+      if (postsData.length === 0) throw new Error('No items found');
+
+      // Map your actual live imagery directly into your grid blocks
+      targetGrid.innerHTML = postsData.slice(0, 6).map(function (post, idx) {
+        // Behold supplies optimized WebP files under sizes.medium.mediaUrl
+        const assetUrl = post.sizes && post.sizes.medium ? post.sizes.medium.mediaUrl : post.mediaUrl;
+        
+        return `
+          <div class="insta-cell">
+            <a href="${post.permalink}" target="_blank" rel="noopener" style="display:block; width:100%; height:100%;">
+              <img src="${assetUrl}" alt="Klozet Kaaran live drop ${idx + 1}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />
+            </a>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('Auto-feed update failed, dropping back to static tiles:', err);
+      useFallbackGrid(targetGrid);
+    }
+  }
+
+  // Backup fallback template keeping your page beautifully populated if network drops
+  function useFallbackGrid(container) {
+    const backupImages = [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBaBX5F-dNtd9BGpdHvZpo9BI4s7OFp2Bhsg3Fe1AnVTBEcwLOdlXIK_xjzb0rAkMS0eFnG_a92KcYpWnN5iqiG1c5QuLHbreyBk9ioWIuv9DZEBesojAcLJckeeiU46tgPtNt1aBWTeVi4TxLWhwgnYahA7h5t4A3jhqwbhnixN0V3gX-dG6gmSHuaeqTgw8M1fK9V0B8A5zscqFM5DKKYkof8ETFDU0C2MQ7U4yntrSv9IYdBFjPUeaN3IBpTJdpbk6jTJPwMEA8",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuCBxmOPkYEtFxKx-0_PEoD4ifh6jdQdv5196I7yCdgHvEztWgYH3fNZn0OkJQRX2PKYMcxDcvRqhW9706W1VRnDt7QAy9WaO5j871RL5cXHjfLNH3cXm6dtBf-XMbVkfz_KNssUQkEuKpGJk8Qxns7rkmWx0csjcC0VNZsqgYbHjnWopgcIE_ikuPJdnQjxTr7jIHPO_N23_0EpWmRc_zuWC39SNQpvgW4EajMCJtxSamm5o55UTpURJIhTjNAEKq2fN4FbydxJeAA",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDH73GaCoxdOQzPCm5d8YdA5aRWJrlq56_2nmKUUzQhY2tO5blgzINVJKuDpA29kLLlM-Tx_3S0eckJMhEsALpwW1lYTCzssk2kqHh-Lxc0jogrBKkQMglKFgc1xupLtV3Nez1DjoJCDN5JxTOHSWyT7fa2KNVjcAUSK_E9fsLVt8ryUCU5H1Z29kR67HxiY8Go_QogNpa1fKECzjC9_VSuiXGwc2UUiAqTKEd7b5Icf8fuOw3hv21Z-3bAj4pfsgSJMxAJeJ9YQ4Q",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDWU1YBuFkl3QEOaRCWorFNzFypTaB9e6SbnWCQAnbs52Q7JZCFmX0VcPmuVoWQpl_19WyRHlPf19TSQZZ_ZzRDNYbYrM571_djdSwtdKqgtptaueqwWHExD9OOZxTnElucqUse_LiW78upfiLqGzXxxSo4ChCYwYIfdVujf-_LglONBtl5y45rudpPcfNfPNYKL53QGfhSRBNnQ59n_yIRBDbv7cePaq44azKsWZEl2I66loJP9ZofYg31wq135VlzyQ_BBIwX4YU",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuASF7oQDccth7R5mZ3kol6-aD3A3dfMmc1u4fL5D-TYM97mOwqoeDg0025KzfVLDKiodK_Jo-TTouNwkoy6Y5DJQhFlz-cIDl-raWfDAgkx93ZqbRn88z6UWESsBL3-xZz6egG_gq0ImecvMZPXy6VL1jzW7qAbEGeqR5714JRYXgNWr5akwdQhqpe_LFwFREiOZ1kErNs6s2OYn47Xn66sjdDcAJ5FqpPIHANZJu1nsVk4Q9cPQGSFLSLIA8p0hwJw7dh6ggP1TPE",
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuAbuhUlcPhdDo4jwdm4Rb5ZBd7kAAA4I54NtK_EabgfgjL-eN3qJPwoPK9WEKcqaT35iHdh2EWf9vnaa6mdPlM5loIUuIqSPM_JlbYVx7UNqlgXcWBa8X7dsM6AsQF0IfY7Ph6pXg76xoDpEYhp5IxXlUX7sVCPngTWzDKolWVC-6Z7-WGcVVghVc-ZDAOJNTBsC36ekGsAFXSk9HuudJ8cnu3QZ0UYqPyKCs5a-QjB3RCNQFEjeRE2dNIeWMoT4jt5MnoKxlE3LJM"
+    ];
+
+    container.innerHTML = backupImages.map(function(src, i) {
+      return `
+        <div class="insta-cell">
+          <a href="https://www.instagram.com/klozetkaaran" target="_blank" rel="noopener" style="display:block; width:100%; height:100%;">
+            <img src="${src}" alt="Instagram post ${i + 1}" loading="lazy" style="width:100%; height:100%; object-fit:cover;" />
+          </a>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Fire up the feed loader
+  autoUpdateInstagramGrid();
