@@ -121,24 +121,42 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: var(--margin-desktop);
 }
 
-/* ─── Navigation ─── */
+/* ─── Navigation (Top of Page State) ─── */
 #main-nav {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   z-index: 900;
   padding: 1.5rem var(--margin-desktop);
-  transition: all 0.5s ease;
-  border-bottom: 1px solid transparent;
+  transition: all 0.4s ease-in-out;
+  
+  /* Solid black bar spanning edge-to-edge at the very top */
+  background: #000000 !important;
+  background-color: #000000 !important;
+  
+  /* Clean, thin custom accent border line underneath */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
+/* ─── Navigation (Scrolling Down State) ─── */
 #main-nav.scrolled {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  border-bottom-color: rgba(255,255,255,0.05);
+  /* Melts into a beautiful, completely see-through background */
+  background: transparent !important;
+  background-color: transparent !important;
+  
+  /* Drops the border entirely so it looks completely seamless */
+  border-bottom: none !important;
+  box-shadow: none !important;
+  
+  /* Slightly pulls it up for a tighter layout frame while moving */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 /* Override Bootstrap nav-link colors */
@@ -1185,4 +1203,422 @@ a { text-decoration: none; }
   transform: scale(1.1);
   box-shadow: 0 12px 35px rgba(245,130,32,0.6);
   color: #000;
+}
+
+/* ================================================
+   CART + WISHLIST — badges, drawers, quick-add popover
+   No hearts anywhere — bookmark icon for "saved" items,
+   matches the streetwear tone instead of a beauty-brand feel.
+================================================ */
+
+/* Nav icon badges (cart / saved count bubble) */
+#kkCartBtn, #kkWishlistBtn { position: relative; }
+.kk-badge, .kk-cart-badge, .kk-wishlist-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--color-primary);
+  color: #000;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 999px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Overlay shared by both drawers */
+.kk-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9990;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.kk-drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Slide-in drawer (cart + wishlist share this shell) */
+.kk-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  background: var(--color-surface, #111);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  z-index: 9991;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kk-drawer.open {
+  transform: translateX(0);
+}
+.kk-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.kk-drawer-head h3 {
+  font-family: var(--font-headline);
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #fff;
+  margin: 0;
+}
+.kk-drawer-close {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.kk-drawer-close:hover { opacity: 1; }
+
+.kk-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.5rem;
+}
+.kk-drawer-empty {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+.kk-drawer-foot {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.kk-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 900;
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Line item shared by cart + wishlist drawers */
+.kk-line-item {
+  display: flex;
+  gap: 0.85rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.kk-line-item img {
+  width: 64px;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: #1a1a1a;
+}
+.kk-line-info { flex: 1; min-width: 0; }
+.kk-line-title {
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+.kk-line-meta {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.75rem;
+  margin: 0 0 6px;
+}
+.kk-line-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.kk-line-price {
+  color: var(--color-primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+.kk-line-remove {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.kk-line-remove:hover { color: var(--color-primary); }
+
+.kk-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 3px;
+  padding: 2px 8px;
+}
+.kk-qty-stepper span {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 14px;
+  text-align: center;
+}
+.kk-qty-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+.kk-qty-btn:hover { color: var(--color-primary); }
+
+.kk-mini-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 0;
+}
+.kk-mini-btn:hover { text-decoration: underline; }
+
+/* Wrapper giving quick-add / bookmark buttons a positioning
+   context, without touching the existing .product-card-image
+   internals (badge, hover overlay, etc.) */
+.kk-card-media {
+  position: relative;
+}
+
+/* Quick-add "+" and bookmark buttons sitting on product card images.
+   Siblings of the <a> that links to the product page — never nested
+   inside it, so the markup stays valid and both stay independently
+   clickable. */
+.kk-quick-add,
+.kk-bookmark {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(10,10,10,0.75);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.kk-quick-add {
+  bottom: 10px;
+  right: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.kk-bookmark {
+  top: 10px;
+  right: 10px;
+  font-size: 0;
+}
+.kk-bookmark .material-symbols-outlined {
+  font-size: 18px;
+}
+.kk-quick-add:hover,
+.kk-bookmark:hover {
+  background: var(--color-primary);
+  color: #000;
+  transform: scale(1.08);
+}
+.kk-bookmark.active {
+  background: var(--color-primary);
+  color: #000;
+}
+
+/* Variant-picker popover (quick add) */
+.kk-popover-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9995;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.kk-popover-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.kk-popover {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -46%) scale(0.96);
+  width: min(360px, 90vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--color-surface, #111);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 1.25rem;
+  z-index: 9996;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.kk-popover.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+.kk-popover-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.kk-popover-head img {
+  width: 52px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.kk-popover-head > div { flex: 1; min-width: 0; }
+.kk-popover-title {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+.kk-popover-price {
+  color: var(--color-primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin: 0;
+}
+.kk-popover-head .kk-drawer-close { margin-left: auto; flex-shrink: 0; }
+
+.kk-popover-section { margin-bottom: 1.1rem; }
+.kk-popover-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.kk-size-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.kk-size-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.kk-size-btn.active, .kk-size-btn:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+.kk-color-row {
+  display: flex;
+  gap: 0.6rem;
+}
+.kk-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  outline: 1px solid rgba(255,255,255,0.2);
+  outline-offset: 2px;
+}
+.kk-color-swatch.active {
+  border-color: var(--color-primary);
+}
+.kk-color-name {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  margin: 8px 0 0;
+}
+.kk-popover-qty-row .kk-qty-stepper {
+  display: inline-flex;
+}
+
+@media (max-width: 480px) {
+  .kk-drawer { width: 100vw; }
+}
+
+/* Forces any inner containers inside the navigation bar to be completely see-through */
+#main-nav .container, 
+#main-nav .container-fluid, 
+#main-nav .row,
+#main-nav .navbar-collapse {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Ultimate cleanup to make sure no internal block has any background or shadow */
+#main-nav,
+#main-nav * {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Vaporizes the final background element hidden inside Bootstrap's collapsible wrapper */
+#main-nav .navbar-collapse,
+#main-nav #navbarCollapse {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Keeps structural child containers clean without fighting the main background toggles */
+#main-nav .container-fluid,
+#main-nav #navbarCollapse,
+#main-nav .navbar-nav {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
 }

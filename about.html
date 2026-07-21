@@ -38,11 +38,16 @@
         </ul>
       </div>
       <div class="d-flex align-items-center gap-3">
-        <a href="https://wa.me/yournumber" class="d-none d-md-flex align-items-center gap-2 text-decoration-none" style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);">
+        <a href="https://wa.me/919025130407" class="d-none d-md-flex align-items-center gap-2 text-decoration-none" style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);">
           WhatsApp Us <span class="material-symbols-outlined" style="color:#f58220;font-size:20px;">chat</span>
         </a>
-        <button style="background:none;border:none;color:#fff;cursor:pointer;" aria-label="Cart">
+        <button id="kkWishlistBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Saved items">
+          <span class="material-symbols-outlined" style="font-size:24px;">bookmark_border</span>
+          <span class="kk-badge" id="kkWishlistBadge">0</span>
+        </button>
+        <button id="kkCartBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Cart">
           <span class="material-symbols-outlined" style="font-size:24px;">shopping_cart</span>
+          <span class="kk-badge" id="kkCartBadge">0</span>
         </button>
       </div>
     </div>
@@ -53,7 +58,7 @@
     <a href="https://instagram.com/klozetkaaran" target="_blank" rel="noopener" aria-label="Instagram">
       <span class="material-symbols-outlined" style="font-size:22px;">photo_camera</span><span>IG</span>
     </a>
-    <a href="https://wa.me/yournumber" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <a href="https://wa.me/919025130407" target="_blank" rel="noopener" aria-label="WhatsApp">
       <span class="material-symbols-outlined" style="font-size:22px;">chat</span><span>WA</span>
     </a>
   </aside>
@@ -217,11 +222,13 @@
     </div>
   </footer>
 
-  <a href="https://wa.me/yournumber" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/919025130407" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <span class="material-symbols-outlined" style="font-size:26px;">chat</span>
   </a>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/cart.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/gsap.js"></script>
 

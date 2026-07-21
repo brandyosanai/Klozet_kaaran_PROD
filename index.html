@@ -60,12 +60,17 @@
 
       <!-- Right icons -->
       <div class="d-flex align-items-center gap-3">
-        <a href="https://wa.me/yournumber" class="d-none d-md-flex align-items-center gap-2 text-decoration-none" style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);transition:color 0.3s;">
+        <a href="https://wa.me/919025130407" class="d-none d-md-flex align-items-center gap-2 text-decoration-none" style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);transition:color 0.3s;">
           WhatsApp Us
           <span class="material-symbols-outlined" style="color:#f58220;font-size:20px;">chat</span>
         </a>
-        <button style="background:none;border:none;color:#fff;cursor:pointer;" aria-label="Cart">
+        <button id="kkWishlistBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Saved items">
+          <span class="material-symbols-outlined" style="font-size:24px;">bookmark_border</span>
+          <span class="kk-badge" id="kkWishlistBadge">0</span>
+        </button>
+        <button id="kkCartBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Cart">
           <span class="material-symbols-outlined" style="font-size:24px;">shopping_cart</span>
+          <span class="kk-badge" id="kkCartBadge">0</span>
         </button>
       </div>
     </div>
@@ -79,7 +84,7 @@
       <span class="material-symbols-outlined" style="font-size:22px;">photo_camera</span>
       <span>IG</span>
     </a>
-    <a href="https://wa.me/yournumber" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <a href="https://wa.me/919025130407" target="_blank" rel="noopener" aria-label="WhatsApp">
       <span class="material-symbols-outlined" style="font-size:22px;">chat</span>
       <span>WA</span>
     </a>
@@ -323,7 +328,8 @@
 
         <!-- Card 1 -->
         <div class="product-card" role="listitem">
-          <a href="product-detail.html?product=urban-zen" class="text-decoration-none">
+          <div class="kk-card-media">
+<a href="product-detail.html?product=urban-zen" class="text-decoration-none">
             <div class="product-card-image orange-glow-hover">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc"
                    alt="Urban Zen Tee – black 240 GSM oversized streetwear tee" />
@@ -336,6 +342,9 @@
               </div>
             </div>
           </a>
+<button class="kk-bookmark" data-product-id="urban-zen" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+<button class="kk-quick-add" data-product-id="urban-zen" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+</div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <a href="product-detail.html?product=urban-zen" class="text-decoration-none">
@@ -349,7 +358,8 @@
 
         <!-- Card 2 -->
         <div class="product-card" role="listitem">
-          <a href="product-detail.html?product=neon-drift" class="text-decoration-none">
+          <div class="kk-card-media">
+<a href="product-detail.html?product=neon-drift" class="text-decoration-none">
             <div class="product-card-image orange-glow-hover">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ"
                    alt="Neon Drift Tee – oversized streetwear with neon print" />
@@ -362,6 +372,9 @@
               </div>
             </div>
           </a>
+<button class="kk-bookmark" data-product-id="neon-drift" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+<button class="kk-quick-add" data-product-id="neon-drift" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+</div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <a href="product-detail.html?product=neon-drift" class="text-decoration-none">
@@ -375,7 +388,8 @@
 
         <!-- Card 3 -->
         <div class="product-card" role="listitem">
-          <a href="product-detail.html?product=vintage-graphic" class="text-decoration-none">
+          <div class="kk-card-media">
+<a href="product-detail.html?product=vintage-graphic" class="text-decoration-none">
             <div class="product-card-image orange-glow-hover">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs"
                    alt="Vintage Graphic Tee – retro-inspired oversized streetwear" />
@@ -388,6 +402,9 @@
               </div>
             </div>
           </a>
+<button class="kk-bookmark" data-product-id="vintage-graphic" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+<button class="kk-quick-add" data-product-id="vintage-graphic" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+</div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <a href="product-detail.html?product=vintage-graphic" class="text-decoration-none">
@@ -401,7 +418,8 @@
 
         <!-- Card 4 (bonus) -->
         <div class="product-card" role="listitem">
-          <a href="product-detail.html?product=zenith-oversized" class="text-decoration-none">
+          <div class="kk-card-media">
+<a href="product-detail.html?product=zenith-oversized" class="text-decoration-none">
             <div class="product-card-image orange-glow-hover">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8"
                    alt="Zenith Oversized Tee – white minimal urban edition" />
@@ -414,6 +432,9 @@
               </div>
             </div>
           </a>
+<button class="kk-bookmark" data-product-id="zenith-oversized" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+<button class="kk-quick-add" data-product-id="zenith-oversized" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+</div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <a href="product-detail.html?product=zenith-oversized" class="text-decoration-none">
@@ -531,7 +552,7 @@
   <!-- ═══ END FOOTER ═══ -->
 
   <!-- WhatsApp floating button -->
-  <a href="https://wa.me/yournumber" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/919025130407" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <span class="material-symbols-outlined" style="font-size:26px;">chat</span>
   </a>
 
@@ -539,6 +560,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- Site scripts -->
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/cart.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/gsap.js"></script>
 

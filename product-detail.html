@@ -25,9 +25,21 @@
   <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
 
   <main class="container py-5" style="margin-top: 100px;">
-    <a href="services.html" class="text-decoration-none text-muted d-inline-flex align-items-center gap-2 mb-4">
-      <span class="material-symbols-outlined">arrow_back</span> BACK TO COLLECTIONS
-    </a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <a href="services.html" class="text-decoration-none text-muted d-inline-flex align-items-center gap-2">
+        <span class="material-symbols-outlined">arrow_back</span> BACK TO COLLECTIONS
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <button id="kkWishlistBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Saved items">
+          <span class="material-symbols-outlined" style="font-size:24px;">bookmark_border</span>
+          <span class="kk-badge" id="kkWishlistBadge">0</span>
+        </button>
+        <button id="kkCartBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Cart">
+          <span class="material-symbols-outlined" style="font-size:24px;">shopping_cart</span>
+          <span class="kk-badge" id="kkCartBadge">0</span>
+        </button>
+      </div>
+    </div>
 
     <div class="row g-5">
       <div class="col-md-6">
@@ -38,123 +50,65 @@
 
       <div class="col-md-6 d-flex flex-column justify-content-between">
         <div>
-          <span class="text-uppercase tracking-widest text-muted small" id="productCategory">DROP COLLECTION</span>
+          <div class="d-flex justify-content-between align-items-start">
+            <span class="text-uppercase tracking-widest text-muted small" id="productCategory">DROP COLLECTION</span>
+            <button id="productBookmarkBtn" class="kk-bookmark" style="position:static;" aria-label="Save for later">
+              <span class="material-symbols-outlined">bookmark_border</span>
+            </button>
+          </div>
           <h1 class="display-5 font-headline fw-black text-uppercase mt-1 mb-2" id="productTitle">LOADING...</h1>
-          <h2 class="h3 text-primary fw-bold mb-4" id="productPrice">₹0.00</h2>
-          
+          <h2 class="h3 text-primary fw-bold mb-4" id="productPrice">₹0</h2>
+
           <p class="text-secondary mb-4" style="line-height: 1.7;" id="productDesc">Loading details...</p>
 
-          <div class="mb-5">
+          <div class="mb-4">
             <p class="fw-bold tracking-widest small mb-2">SELECT SIZE</p>
-            <div class="d-flex gap-2" id="sizeContainer">
-              <button class="size-btn active">M</button>
-              <button class="size-btn">L</button>
-              <button class="size-btn">XL</button>
+            <div class="d-flex gap-2" id="sizeContainer"></div>
+          </div>
+
+          <div class="mb-4">
+            <p class="fw-bold tracking-widest small mb-2">SELECT COLOR — <span id="selectedColorName"></span></p>
+            <div class="d-flex gap-2" id="colorContainer"></div>
+          </div>
+
+          <div class="mb-5">
+            <p class="fw-bold tracking-widest small mb-2">QUANTITY</p>
+            <div class="kk-qty-stepper">
+              <button class="kk-qty-btn" id="pdQtyMinus" aria-label="Decrease quantity">−</button>
+              <span id="pdQtyValue">1</span>
+              <button class="kk-qty-btn" id="pdQtyPlus" aria-label="Increase quantity">+</button>
             </div>
           </div>
         </div>
 
         <div>
-          <a id="orderWhatsAppBtn" href="#" target="_blank" class="btn btn-kk-primary w-100 py-3 text-center d-flex align-items-center justify-content-center gap-2 fw-bold text-uppercase tracking-widest" style="background: var(--color-primary); color:#000; border:none; text-decoration:none;">
-            PLACE ORDER VIA WHATSAPP <span class="material-symbols-outlined">bolt</span>
-          </a>
+          <button id="addToCartBtn" class="btn btn-kk-primary w-100 py-3 text-center d-flex align-items-center justify-content-center gap-2 fw-bold text-uppercase tracking-widest" style="background: var(--color-primary); color:#000; border:none;">
+            ADD TO CART <span class="material-symbols-outlined">shopping_cart</span>
+          </button>
         </div>
       </div>
     </div>
   </main>
 
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/cart.js"></script>
   <script>
-    // 1. Mock Database - Populate this with your real product paths and metadata
-    const productsDb = {
-      "heavyweight-tee": {
-        title: "240 GSM OVERSIZED HEAVYWEIGHT TEE",
-        price: "₹1,499",
-        category: "RAW ESSENTIALS",
-        desc: "Engineered for pure street style culture. Crafted from heavy-gauge 240 GSM pure cotton loopback fabric. Relaxed drop-shoulder fit with structured neckline that stays shape-locked.",
-        images: ["assets/images/product-front.jpg", "assets/images/product-back.jpg"]
-      },
-      "anime-drop": {
-        title: "NEO-TOKYO ANIME OVERSIZED TEE",
-        price: "₹1,699",
-        category: "LIMITED DROPS",
-        desc: "Bold high-definition screen print styling across panels. High durability graphics constructed to withstand raw daily wear.",
-        images: ["assets/images/anime-front.jpg", "assets/images/anime-back.jpg"]
-      },
-      // ─── Added for the hero "card deck" quick-view links ───
-      // Swap these lh3 placeholder URLs for your own product photography
-      // whenever you have final shots — same shape, just new image paths.
-      "neon-drift": {
-        title: "NEON DRIFT TEE",
-        price: "₹1,599",
-        category: "ANIME COLLECTION",
-        desc: "Oversized tee with a neon-lit graphic print. Limited edition, 240 GSM heavyweight cotton.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ"
-        ]
-      },
-      "ignition": {
-        title: "IGNITION TEE",
-        price: "₹1,949",
-        category: "ANIME COLLECTION",
-        desc: "Statement graphic tee built for standout street presence. Unisex, oversized fit.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I"
-        ]
-      },
-      "zenith-oversized": {
-        title: "ZENITH OVERSIZED TEE",
-        price: "₹1,699",
-        category: "MINIMAL COLLECTION",
-        desc: "Clean, minimal white tee in a relaxed oversized silhouette. Unisex, 240 GSM cotton.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8"
-        ]
-      },
-      "urban-zen": {
-        title: "URBAN ZEN TEE",
-        price: "₹1,499",
-        category: "MINIMAL COLLECTION",
-        desc: "Limited edition oversized tee, engineered with 240 GSM heavy cotton for everyday street culture.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc"
-        ]
-      },
-      "vintage-graphic": {
-        title: "VINTAGE GRAPHIC TEE",
-        price: "₹1,799",
-        category: "GRAPHIC COLLECTION",
-        desc: "Retro-inspired oversized tee with a distressed graphic print. Men's fit, 240 GSM cotton.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs"
-        ]
-      },
-      "vortex-wash": {
-        title: "VORTEX WASH TEE",
-        price: "₹1,849",
-        category: "GRAPHIC COLLECTION",
-        desc: "Washed-finish graphic tee with a bold identity print. Men's fit, oversized silhouette.",
-        images: [
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0"
-        ]
-      }
-    };
-
-    // 2. Parse URL parameter
+    // Parse which product to show from the URL, e.g. product-detail.html?product=urban-zen
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('product') || 'heavyweight-tee'; 
-    const product = productsDb[productId];
+    const productId = urlParams.get('product') || 'heavyweight-tee';
+    const product = (window.KK_PRODUCTS || {})[productId];
+
+    let selectedSize = null;
+    let selectedColor = null;
 
     if (product) {
       document.getElementById('productTitle').innerText = product.title;
-      document.getElementById('productPrice').innerText = product.price;
+      document.getElementById('productPrice').innerText = '₹' + product.price.toLocaleString('en-IN');
       document.getElementById('productCategory').innerText = product.category;
       document.getElementById('productDesc').innerText = product.desc;
-      
-      // Set main image
-      const mainImg = document.getElementById('mainProductImage');
-      mainImg.src = product.images[0];
 
-      // Build Thumbnails
+      // Main image + thumbnails
+      document.getElementById('mainProductImage').src = product.images[0];
       const thumbRow = document.getElementById('thumbnailRow');
       product.images.forEach((imgSrc, index) => {
         const col = document.createElement('div');
@@ -163,25 +117,72 @@
         thumbRow.appendChild(col);
       });
 
-      // Size handling
-      let selectedSize = 'M';
-      const sizeButtons = document.querySelectorAll('#sizeContainer .size-btn');
-      sizeButtons.forEach(btn => {
+      // Size buttons — built from this product's own size list
+      selectedSize = product.sizes[0];
+      const sizeContainer = document.getElementById('sizeContainer');
+      product.sizes.forEach((size, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'size-btn' + (i === 0 ? ' active' : '');
+        btn.textContent = size;
         btn.addEventListener('click', () => {
-          sizeButtons.forEach(b => b.classList.remove('active'));
+          sizeContainer.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          selectedSize = btn.innerText;
-          updateWhatsAppLink(product.title, selectedSize);
+          selectedSize = size;
         });
+        sizeContainer.appendChild(btn);
       });
 
-      // WhatsApp Dynamic Setup
-      function updateWhatsAppLink(title, size) {
-        const phone = "91XXXXXXXXXX"; // Replace with your WhatsApp number
-        const message = `Hey KLOZET KAARAN, I want to order:\n\nProduct: ${title}\nSize: ${size}\n\nPlease confirm availability!`;
-        document.getElementById('orderWhatsAppBtn').href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      // Color swatches — built from this product's own color list
+      selectedColor = product.colors[0].name;
+      document.getElementById('selectedColorName').textContent = selectedColor;
+      const colorContainer = document.getElementById('colorContainer');
+      product.colors.forEach((color, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'kk-color-swatch' + (i === 0 ? ' active' : '');
+        btn.style.background = color.hex;
+        btn.title = color.name;
+        btn.addEventListener('click', () => {
+          colorContainer.querySelectorAll('.kk-color-swatch').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedColor = color.name;
+          document.getElementById('selectedColorName').textContent = selectedColor;
+        });
+        colorContainer.appendChild(btn);
+      });
+
+      // Quantity stepper
+      let qty = 1;
+      document.getElementById('pdQtyMinus').addEventListener('click', () => {
+        qty = Math.max(1, qty - 1);
+        document.getElementById('pdQtyValue').textContent = qty;
+      });
+      document.getElementById('pdQtyPlus').addEventListener('click', () => {
+        qty += 1;
+        document.getElementById('pdQtyValue').textContent = qty;
+      });
+
+      // Add to Cart — hands off to the shared cart engine (assets/js/cart.js),
+      // which opens the cart drawer and (eventually) builds the WhatsApp message.
+      document.getElementById('addToCartBtn').addEventListener('click', () => {
+        window.KKCartAPI.addToCart(productId, selectedSize, selectedColor, qty);
+      });
+
+      // Bookmark toggle for this specific product page
+      const bookmarkBtn = document.getElementById('productBookmarkBtn');
+      function refreshBookmarkIcon() {
+        const saved = window.KKCartAPI.isSaved(productId);
+        bookmarkBtn.classList.toggle('active', saved);
+        bookmarkBtn.querySelector('.material-symbols-outlined').textContent = saved ? 'bookmark' : 'bookmark_border';
       }
-      updateWhatsAppLink(product.title, selectedSize);
+      bookmarkBtn.addEventListener('click', () => {
+        window.KKCartAPI.toggleSaved(productId);
+        refreshBookmarkIcon();
+      });
+      refreshBookmarkIcon();
+
+    } else {
+      document.getElementById('productTitle').innerText = 'PRODUCT NOT FOUND';
+      document.getElementById('productDesc').innerText = 'This item may have been removed. Head back to Collections to keep browsing.';
     }
 
     // Thumbnail swap handler
