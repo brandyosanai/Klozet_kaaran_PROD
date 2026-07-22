@@ -20,7 +20,7 @@
   }
 
   /* Hero */
-  .hero-section { height: auto; min-height: 100svh; }
+  .hero-section { height: auto; min-height: 100svh; flex-direction: column; align-items: flex-start; }
   .hero-headline { font-size: clamp(48px, 12vw, 80px); }
   .hero-image-wrap {
     width: 100%;
@@ -153,6 +153,16 @@
   .drop-title { font-size: 52px; }
   .page-header-title { font-size: 38px; }
   .insta-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Instagram section header — "@KLOZETKAARAN" + "FOLLOW THE VIBE"
+   were squeezing into one row on narrow screens; stack them instead. */
+@media (max-width: 767.98px) {
+  .kk-insta-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
 }
 
 /* ─── Wide desktop (>= 1400px) ─── */

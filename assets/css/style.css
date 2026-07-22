@@ -816,13 +816,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 .product-slider::-webkit-scrollbar { display: none; }
 
-.product-card {
+.product-slider .product-card {
   min-width: 340px;
   flex-shrink: 0;
   scroll-snap-align: start;
 }
 @media (min-width: 768px) {
-  .product-card { min-width: 420px; }
+  .product-slider .product-card { min-width: 420px; }
 }
 
 .product-card-image {
@@ -852,6 +852,15 @@ h1, h2, h3, h4, h5, h6 {
   transition: opacity 0.3s ease;
 }
 .product-card:hover .product-card-hover-btn { opacity: 1; }
+
+/* Touch devices don't have real :hover — on iOS Safari especially,
+   tapping a card can make :hover styles "stick" after the tap,
+   leaving this dark overlay visibly stuck over the product photo.
+   Hiding it outright on non-hover-capable devices keeps the image
+   clean; the whole card is still a normal tappable link regardless. */
+@media (hover: none) {
+  .product-card-hover-btn { display: none; }
+}
 
 .product-badge {
   position: absolute;
@@ -962,7 +971,8 @@ h1, h2, h3, h4, h5, h6 {
   filter: grayscale(1);
   transition: filter 0.5s ease, transform 0.5s ease;
 }
-.insta-cell:hover img {
+.insta-cell:hover img,
+.insta-cell:active img {
   filter: grayscale(0);
   transform: scale(1.1);
 }
