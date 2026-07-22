@@ -968,12 +968,10 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1);
-  transition: filter 0.5s ease, transform 0.5s ease;
+  transition: transform 0.5s ease;
 }
 .insta-cell:hover img,
 .insta-cell:active img {
-  filter: grayscale(0);
   transform: scale(1.1);
 }
 
@@ -2106,4 +2104,210 @@ a { text-decoration: none; }
 @media (max-width: 767px) {
   .kk-dash-grid { grid-template-columns: 1fr; }
   .kk-dash-values { grid-template-columns: 1fr 1fr; }
+}
+
+/* ================================================
+   CHAPTER SECTIONS — new content appended at the very
+   bottom of the homepage, below the existing Instagram
+   grid. Nothing above this point was modified — these
+   are pure additions, ported from the React "Street
+   Archive" concept into vanilla HTML/CSS/JS, using real
+   catalog products throughout.
+================================================ */
+.kk-chapter-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+}
+.kk-chapter-title {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+}
+
+/* ── Chapter 00: New Drop runway (horizontal scroll-snap) ── */
+.kk-runway {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 var(--margin-desktop) 2rem;
+  scrollbar-width: none;
+}
+.kk-runway::-webkit-scrollbar { display: none; }
+.kk-runway-card {
+  position: relative;
+  flex: 0 0 min(72vw, 340px);
+  height: 62vh;
+  min-height: 380px;
+  scroll-snap-align: start;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.kk-runway-card img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.kk-runway-card:hover img { transform: scale(1.05); }
+.kk-runway-info {
+  position: absolute; inset-inline: 0; bottom: 0;
+  padding: 1.25rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 80%);
+}
+.kk-runway-drop {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5); margin: 0 0 2px;
+}
+.kk-runway-title {
+  font-family: var(--font-headline); font-weight: 800; font-size: 1.15rem;
+  color: #fff; margin: 0; text-transform: uppercase;
+}
+
+/* ── Chapter 01: Field Notes (asymmetric grid) ── */
+.kk-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .kk-field-grid { grid-template-columns: repeat(4, 1fr); }
+  .kk-field-offset-1 { margin-top: 4rem; }
+  .kk-field-offset-2 { margin-top: 1.5rem; }
+  .kk-field-offset-3 { margin-top: 6rem; }
+}
+.kk-field-media {
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.kk-field-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.kk-field-item:hover .kk-field-media img { transform: scale(1.05); }
+.kk-field-add {
+  position: absolute; inset-inline: 0; bottom: 0;
+  width: 100%; height: auto;
+  border-radius: 0;
+  background: #fff; color: #000;
+  border: none;
+  padding: 0.6rem 0;
+  font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  display: block;
+  z-index: 5;
+}
+.kk-field-item:hover .kk-field-add { transform: translateY(0); }
+.kk-field-index {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); margin: 0.75rem 0 0.15rem;
+}
+.kk-field-name {
+  font-family: var(--font-headline); font-weight: 800; font-size: 0.9rem;
+  color: #fff; text-transform: uppercase; margin: 0;
+}
+.kk-field-price { font-size: 0.8rem; color: var(--color-primary); font-weight: 800; margin: 0; }
+
+/* ── Chapter 02: Color Drop (swipeable strip) ── */
+.kk-colordrop-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0 var(--margin-desktop) 1rem;
+  scrollbar-width: none;
+}
+.kk-colordrop-track::-webkit-scrollbar { display: none; }
+.kk-colordrop-card {
+  position: relative;
+  flex: 0 0 min(85vw, 460px);
+  height: 65vh;
+  min-height: 420px;
+  scroll-snap-align: center;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-surface);
+  transition: transform 0.3s ease;
+}
+.kk-colordrop-card:hover { transform: scale(1.01); }
+.kk-colordrop-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.kk-colordrop-tint { position: absolute; inset: 0; }
+.kk-colordrop-shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 45%); }
+.kk-colordrop-name {
+  position: absolute; left: 1rem; bottom: -6px;
+  font-family: var(--font-headline); font-weight: 900;
+  font-size: clamp(2.2rem, 9vw, 3.6rem);
+  line-height: 1;
+  color: rgba(255,255,255,0.95);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  margin: 0;
+  text-transform: uppercase;
+}
+.kk-colordrop-bottom {
+  position: absolute; right: 1.25rem; bottom: 1.25rem;
+  display: flex; align-items: center; gap: 0.75rem;
+  z-index: 2;
+}
+.kk-colordrop-bottom span { color: #fff; font-weight: 800; font-size: 0.9rem; }
+.kk-colordrop-arrow {
+  background: none; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+  width: 40px; height: 40px; color: #fff; cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.kk-colordrop-arrow:hover { border-color: #fff; }
+
+/* ── Chapters 03–05: collection moodboards (irregular tiles) ── */
+.kk-mood-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 180px;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .kk-mood-grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; }
+}
+.kk-mood-big  { grid-column: span 2; grid-row: span 2; }
+.kk-mood-small { grid-column: span 1; grid-row: span 1; }
+.kk-mood-tall { grid-column: span 1; grid-row: span 2; }
+.kk-mood-wide { grid-column: span 2; grid-row: span 1; }
+.kk-mood-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-surface);
+}
+.kk-mood-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.kk-mood-tile:hover img { transform: scale(1.06); }
+.kk-mood-info {
+  position: absolute; inset-inline: 0; bottom: 0;
+  padding: 0.85rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 85%);
+}
+.kk-mood-name {
+  font-family: var(--font-headline); font-weight: 800; font-size: 0.85rem;
+  color: #fff; margin: 0; text-transform: uppercase;
+}
+.kk-mood-tile .kk-bookmark,
+.kk-mood-tile .kk-quick-add {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.kk-mood-tile:hover .kk-bookmark,
+.kk-mood-tile:hover .kk-quick-add {
+  opacity: 1;
+}
+@media (hover: none) {
+  .kk-mood-tile .kk-bookmark,
+  .kk-mood-tile .kk-quick-add {
+    opacity: 1;
+  }
 }

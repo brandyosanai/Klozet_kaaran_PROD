@@ -20,7 +20,7 @@
   }
 
   /* Hero */
-  .hero-section { height: auto; min-height: 100svh; flex-direction: column; align-items: flex-start; }
+  .hero-section { height: auto; min-height: 100svh; flex-direction: column; align-items: flex-start; padding-top: 170px; }
   .hero-headline { font-size: clamp(48px, 12vw, 80px); }
   .hero-image-wrap {
     width: 100%;
@@ -132,12 +132,16 @@
   .drop-title { font-size: clamp(50px, 20vw, 90px); letter-spacing: 0.05em; }
   .btn-kk-primary { padding: 1rem 2rem; }
 
-  /* Page header */
-  .page-header { padding-top: calc(56px + 2rem); }
+  /* Page header — was calculated before the marquee bar existed;
+     170px matches the real measured nav+marquee height on mobile
+     with a small buffer, rather than an under-estimated guess. */
+  .page-header { padding-top: 170px; }
   .page-header-title { font-size: clamp(40px, 12vw, 60px); }
 
-  /* Slider product card min-width */
-  .product-card { min-width: 280px; }
+  /* Slider product card min-width (scoped to the slider only —
+     an unscoped version here would re-break the Collections page
+     2-column grid the same way the desktop rule did). */
+  .product-slider .product-card { min-width: 280px; }
 
   /* Contact */
   .contact-highlight { padding: 1.25rem 1.5rem; }
@@ -169,7 +173,7 @@
 @media (min-width: 1400px) {
   .hero-headline { font-size: 110px; }
   .section-headline { font-size: 90px; }
-  .product-card { min-width: 460px; }
+  .product-slider .product-card { min-width: 460px; }
   .insta-grid { grid-template-columns: repeat(6, 1fr); }
 }
 

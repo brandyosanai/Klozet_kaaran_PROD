@@ -489,3 +489,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Fire up the feed loader
   autoUpdateInstagramGrid();
+/* ================================================
+   CHAPTER SECTIONS — Color Drop arrow scroll buttons.
+   Self-contained block, appended at the end so nothing
+   above it (existing site behavior) is touched.
+================================================ */
+document.addEventListener('DOMContentLoaded', function () {
+  const colorTrack = document.getElementById('colorDropTrack');
+  const prevBtn = document.getElementById('colorDropPrev');
+  const nextBtn = document.getElementById('colorDropNext');
+
+  if (colorTrack && prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', function () {
+      colorTrack.scrollBy({ left: -colorTrack.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', function () {
+      colorTrack.scrollBy({ left: colorTrack.clientWidth * 0.9, behavior: 'smooth' });
+    });
+  }
+});
