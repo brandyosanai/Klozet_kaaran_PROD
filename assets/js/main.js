@@ -294,6 +294,57 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* ================================================
+     7B. COLLECTION FILTER — Live-filters the product
+         grid on services.html by category. The chip
+         highlight itself is handled by the generic
+         handler above; this just shows/hides cards.
+  ================================================ */
+  const collectionGroup = document.getElementById('collectionFilterGroup');
+  const productGrid = document.getElementById('productGrid');
+  const productCountEl = document.getElementById('productCount');
+
+  if (collectionGroup && productGrid) {
+    const gridItems = Array.from(productGrid.children).filter(function (el) {
+      return el.hasAttribute('data-category');
+    });
+
+    function applyFilter(filter) {
+      let visibleCount = 0;
+      gridItems.forEach(function (item) {
+        const matches = filter === 'all' || item.getAttribute('data-category') === filter;
+        item.style.display = matches ? '' : 'none';
+        if (matches) visibleCount++;
+      });
+
+      if (productCountEl) productCountEl.textContent = String(visibleCount);
+
+      // Empty state — shouldn't normally trigger since every real
+      // collection has at least one product, but kept as a safety net.
+      let emptyMsg = productGrid.querySelector('.kk-filter-empty');
+      if (visibleCount === 0) {
+        if (!emptyMsg) {
+          emptyMsg = document.createElement('div');
+          emptyMsg.className = 'kk-filter-empty';
+          productGrid.appendChild(emptyMsg);
+        }
+        emptyMsg.textContent = 'Nothing in this collection yet — check back soon.';
+      } else if (emptyMsg) {
+        emptyMsg.remove();
+      }
+    }
+
+    collectionGroup.querySelectorAll('.filter-chip-btn').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        applyFilter(this.getAttribute('data-filter'));
+      });
+    });
+
+    // Initial state matches whichever chip loads as "active" (All, by default)
+    const initialChip = collectionGroup.querySelector('.filter-chip-btn.active') || collectionGroup.querySelector('.filter-chip-btn');
+    if (initialChip) applyFilter(initialChip.getAttribute('data-filter'));
+  }
+
+  /* ================================================
      8. SIZE SELECTOR — Highlights the chosen size
         on the product details / services page.
   ================================================ */

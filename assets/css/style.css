@@ -124,7 +124,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Navigation (Top of Page State) ─── */
 #main-nav {
   position: fixed;
-  top: 0;
+  top: 34px;
   left: 0;
   width: 100%;
   z-index: 900;
@@ -135,13 +135,60 @@ h1, h2, h3, h4, h5, h6 {
   background: #000000 !important;
   background-color: #000000 !important;
   
-  /* Clean, thin custom accent border line underneath */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  /* No border here — the marquee bar directly above already
+     provides a clean edge; a second faint line right underneath it
+     just reads as clutter rather than a deliberate one. */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* ================================================
+   SITE-WIDE MARQUEE BAR — scrolling announcement strip
+   above the nav.
+================================================ */
+.kk-marquee {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 901;
+  background: #000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+.kk-marquee-track {
+  display: inline-flex;
+  align-items: center;
+  animation: kk-marquee-scroll 22s linear infinite;
+}
+.kk-marquee-track span {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  padding: 0 2rem;
+}
+.kk-marquee-track span.kk-marquee-dot {
+  color: var(--color-primary);
+  padding: 0 0.5rem;
+}
+@keyframes kk-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kk-marquee-track { animation: none; }
+  .kk-marquee { overflow-x: auto; }
 }
 
 /* ─── Navigation (Scrolling Down State) ─── */
@@ -336,13 +383,56 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   overflow: hidden;
 }
-.hero-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: right center;
-  filter: grayscale(1) brightness(0.6) contrast(1.2);
+
+/* ─── Atmospheric background — industrial texture + drifting light ───
+   Replaces the old flat photo. Two soft blurred orange blobs drift
+   slowly behind everything, over a dark radial gradient base. */
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(28,23,18,0.85) 0%, rgba(5,5,5,0.92) 65%),
+    url("../images/hero.jpg") center center / cover no-repeat;
+  overflow: hidden;
 }
+.hero-atmosphere::before,
+.hero-atmosphere::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.32;
+  will-change: transform;
+}
+.hero-atmosphere::before {
+  width: 520px;
+  height: 520px;
+  background: #f58220;
+  top: -8%;
+  right: 8%;
+  animation: kk-light-drift-a 16s ease-in-out infinite;
+}
+.hero-atmosphere::after {
+  width: 420px;
+  height: 420px;
+  background: #8a3d10;
+  bottom: -12%;
+  right: 28%;
+  animation: kk-light-drift-b 20s ease-in-out infinite;
+}
+@keyframes kk-light-drift-a {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-70px, 50px); }
+}
+@keyframes kk-light-drift-b {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(60px, -40px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmosphere::before,
+  .hero-atmosphere::after { animation: none; }
+}
+
 .hero-image-fade {
   position: absolute;
   inset: 0;
@@ -1621,4 +1711,389 @@ a { text-decoration: none; }
   background-color: transparent !important;
   box-shadow: none !important;
   border: none !important;
+}
+/* ================================================
+   HERO — ORBITING COLLECTION CAROUSEL
+   ================================================
+   Three real collections, continuously orbiting a center
+   point. Pure CSS keyframe animation (GPU-accelerated,
+   no JS driving the motion) — one shared @keyframes cycle,
+   each item offset by a negative animation-delay so all
+   three occupy a different point in the orbit at any time.
+   One card is always front/full-size/bright; the other two
+   recede smaller and dimmer to the sides. Hover pauses it.
+================================================ */
+.hero-orbit-zone {
+  position: absolute;
+  top: 50%;
+  right: 8%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 520px;
+  max-width: 44vw;
+}
+.hero-orbit-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.hero-orbit {
+  position: relative;
+  height: 420px;
+}
+
+/* Soft glow anchoring the orbit visually — the "hub" everything
+   circles around. */
+.hero-orbit-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,130,32,0.16) 0%, transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.hero-orbit-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 190px;
+  margin-left: -95px;
+  margin-top: -125px;
+  text-decoration: none;
+  --deck-color: var(--color-primary);
+  --deck-glow: rgba(245, 130, 32, 0.35);
+  animation: kk-orbit-cycle 18s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+.hero-orbit-item--rust  { --deck-color: #f58220; --deck-glow: rgba(245, 130, 32, 0.45); animation-delay: 0s; }
+.hero-orbit-item--steel { --deck-color: #5b7a91; --deck-glow: rgba(91, 122, 145, 0.45); animation-delay: -6s; }
+.hero-orbit-item--gold  { --deck-color: #d1a24a; --deck-glow: rgba(209, 162, 74, 0.45); animation-delay: -12s; }
+
+/* One shared elliptical path — front (bottom-center, full size/
+   opacity) -> upper-left (small/dim) -> upper-right (small/dim) ->
+   back to front. All three items run the SAME keyframes; their
+   negative animation-delays just start them at different points
+   in the cycle, so they're always evenly spaced around the orbit. */
+@keyframes kk-orbit-cycle {
+  0%, 100% {
+    transform: translate(0, 120px) scale(1);
+    opacity: 1;
+    z-index: 3;
+  }
+  33.33% {
+    transform: translate(-150px, -70px) scale(0.68);
+    opacity: 0.55;
+    z-index: 1;
+  }
+  66.66% {
+    transform: translate(150px, -70px) scale(0.68);
+    opacity: 0.55;
+    z-index: 1;
+  }
+}
+
+.hero-orbit:hover .hero-orbit-item,
+.hero-orbit-item:focus-within {
+  animation-play-state: paused;
+}
+
+.hero-orbit-card {
+  position: relative;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--deck-color);
+  background: #111;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.hero-orbit-item:hover .hero-orbit-card {
+  box-shadow: 0 24px 44px rgba(0,0,0,0.55), 0 0 40px var(--deck-glow);
+  transform: scale(1.03);
+}
+
+.hero-orbit-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  filter: saturate(0.85) brightness(0.75);
+  transition: transform 0.5s ease, opacity 0.35s ease;
+}
+.hero-orbit-item:hover .hero-orbit-card img { transform: scale(1.06); opacity: 0.7; }
+
+.hero-orbit-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.7rem 0.8rem;
+}
+.hero-orbit-num {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--deck-color);
+}
+.hero-orbit-icon { font-size: 16px !important; color: rgba(255,255,255,0.5); }
+
+.hero-orbit-statement {
+  position: relative;
+  z-index: 2;
+  margin: 0.4rem 0.85rem 0;
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: 1.3rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.01em;
+}
+
+.hero-orbit-bottom {
+  position: absolute;
+  z-index: 2;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0.85rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 75%);
+}
+.hero-orbit-name {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+}
+.hero-orbit-tag {
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 2px 0 0;
+}
+.hero-orbit-bottom .material-symbols-outlined {
+  font-size: 18px;
+  color: var(--deck-color);
+  transition: transform 0.3s ease;
+}
+.hero-orbit-item:hover .hero-orbit-bottom .material-symbols-outlined { transform: translateX(4px); }
+
+.hero-orbit-hint {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.hero-orbit-hint .material-symbols-outlined { font-size: 15px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-item { animation: none; }
+  .hero-orbit-item--rust  { transform: translate(-190px, 0); opacity: 1; }
+  .hero-orbit-item--steel { transform: translate(0, 0); opacity: 1; }
+  .hero-orbit-item--gold  { transform: translate(190px, 0); opacity: 1; }
+}
+
+/* Mobile: an orbit has no room to breathe on a phone screen, so it
+   becomes a horizontal swipeable row instead — same three cards,
+   animation disabled, laid out in a simple flex row. */
+@media (max-width: 991px) {
+  .hero-orbit-zone {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    margin-top: 2rem;
+  }
+  .hero-orbit {
+    height: auto;
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+  .hero-orbit::-webkit-scrollbar { display: none; }
+  .hero-orbit-hub { display: none; }
+  .hero-orbit-item {
+    position: relative;
+    top: auto; left: auto;
+    margin: 0;
+    flex: 0 0 150px;
+    scroll-snap-align: start;
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .hero-orbit-card { height: 220px; }
+}
+
+/* ================================================
+   DROP DASHBOARD — 2x2 grid of panels replacing the
+   old Brand Story section (Live Drop / Why Us /
+   Certificate / Special Edition).
+================================================ */
+.kk-dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+.kk-dash-panel {
+  background: var(--color-surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.kk-dash-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+.kk-dash-panel-num {
+  font-family: var(--font-headline);
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: var(--color-primary);
+}
+.kk-dash-panel-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Live Drop / Special Edition panels */
+.kk-dash-drop {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.kk-dash-drop img {
+  width: 72px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.kk-dash-drop-name {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+.kk-dash-drop-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 8px;
+}
+.kk-dash-stock {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+}
+.kk-dash-stock strong {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-family: var(--font-headline);
+}
+.kk-dash-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.kk-dash-cta .material-symbols-outlined { font-size: 16px; transition: transform 0.25s ease; }
+.kk-dash-cta:hover .material-symbols-outlined { transform: translateX(3px); }
+
+/* Why Klozet Kaaran panel */
+.kk-dash-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.kk-dash-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.kk-dash-value .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--color-primary);
+}
+.kk-dash-value p {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.4;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Certificate of Authenticity panel */
+.kk-dash-cert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+.kk-dash-cert-icon {
+  font-size: 34px !important;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+.kk-dash-cert-title {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+.kk-dash-cert-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .kk-dash-grid { grid-template-columns: 1fr; }
+  .kk-dash-values { grid-template-columns: 1fr 1fr; }
 }

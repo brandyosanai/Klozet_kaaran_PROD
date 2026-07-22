@@ -16,9 +16,23 @@
 </head>
 <body>
 
+  <!-- ═══ SCROLLING ANNOUNCEMENT BAR ═══ -->
+  <div class="kk-marquee" aria-hidden="true">
+    <div class="kk-marquee-track">
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+    </div>
+  </div>
+  <!-- ═══ END ANNOUNCEMENT BAR ═══ -->
   <div class="noise-overlay" aria-hidden="true"></div>
   <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
-  <div id="scrollProgress" style="position:fixed;top:0;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
+  <div id="scrollProgress" style="position:fixed;top:34px;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
 
   <!-- ═══ NAVIGATION ═══ -->
   <nav id="main-nav" class="navbar navbar-expand-lg scrolled" aria-label="Main navigation">
@@ -100,12 +114,17 @@
               <!-- Collection filter -->
               <div class="mb-5">
                 <p class="filter-section-title">Collection</p>
-                <div class="d-flex flex-wrap gap-2">
-                  <button class="filter-chip-btn active">Anime</button>
-                  <button class="filter-chip-btn">Graphic</button>
-                  <button class="filter-chip-btn">Minimal</button>
-                  <button class="filter-chip-btn">Vintage</button>
-                  <button class="filter-chip-btn">Archive</button>
+                <div class="d-flex flex-wrap gap-2" id="collectionFilterGroup">
+                  <button class="filter-chip-btn active" data-filter="all">All</button>
+                  <button class="filter-chip-btn" data-filter="acid-wash">Acid Wash</button>
+                  <button class="filter-chip-btn" data-filter="plain">Plain</button>
+                  <button class="filter-chip-btn" data-filter="terrain">Terrain</button>
+                  <button class="filter-chip-btn" data-filter="motorist">Motorist Edition</button>
+                  <button class="filter-chip-btn" data-filter="fan-edition">Fan Edition</button>
+                  <button class="filter-chip-btn" data-filter="classic-cartoon">Classic Cartoon</button>
+                  <button class="filter-chip-btn" data-filter="special-edition">Special Edition</button>
+                  <button class="filter-chip-btn" data-filter="womens">Women's</button>
+                  <button class="filter-chip-btn" data-filter="festive">Festive</button>
                 </div>
               </div>
 
@@ -144,7 +163,7 @@
             <!-- Sort row -->
             <div class="d-flex justify-content-between align-items-center mb-4 reveal">
               <p style="font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin:0;">
-                Showing <span style="color:#f58220;">12</span> products
+                Showing <span id="productCount" style="color:#f58220;">23</span> products
               </p>
               <select style="background:var(--color-surface);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:0.5rem 1rem;font-family:var(--font-body);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;outline:none;" aria-label="Sort products">
                 <option>LATEST DROPS</option>
@@ -155,195 +174,651 @@
             </div>
 
             <!-- Product grid: 3 columns -->
-            <div class="row g-4 stagger-parent">
-
-              <!-- Product 1 -->
-             <div class="col-sm-6 col-xl-4">
+            <div class="row g-4 stagger-parent" id="productGrid">
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=urban-zen" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Urban Zen Tee" loading="lazy" />
-                      <div class="product-badge glass-card">240 GSM</div>
-                      
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=lava-rust" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Lava Rust" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="urban-zen" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="urban-zen" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
-                  
+                    </a>
+                    <button class="kk-bookmark" data-product-id="lava-rust" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="lava-rust" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=urban-zen" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color: #fff; margin-bottom: 0;">URBAN ZEN TEE</p>
+                      <a href="product-detail.html?product=lava-rust" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">LAVA RUST</p>
                       </a>
                       <p class="product-card-sub">Unisex • Oversized</p>
                     </div>
-                    <span class="product-card-price" style="font-size:1.2rem;">₹1,499</span>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Product 2 -->
-              <div class="col-sm-6 col-xl-4">
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=neon-drift" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ"
-                             alt="Neon Drift Tee" loading="lazy" />
-                      <div class="product-badge glass-card">LIMITED</div>
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=purple-isnt-basic" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8" alt="Purple Isn't Basic" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="neon-drift" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="neon-drift" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="purple-isnt-basic" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="purple-isnt-basic" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=neon-drift" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">NEON DRIFT TEE</p>
+                      <a href="product-detail.html?product=purple-isnt-basic" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">PURPLE ISN'T BASIC</p>
                       </a>
                       <p class="product-card-sub">Unisex • Oversized</p>
                     </div>
-                    <span class="product-card-price" style="font-size:1.2rem;">₹1,899</span>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Product 3 -->
-              <div class="col-sm-6 col-xl-4">
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=vintage-graphic" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs"
-                             alt="Vintage Graphic Tee" loading="lazy" />
-                      <div class="product-badge glass-card">240 GSM</div>
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=sivappu-rebel" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ" alt="Sivappu Rebel" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="vintage-graphic" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="vintage-graphic" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="sivappu-rebel" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="sivappu-rebel" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=vintage-graphic" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">VINTAGE GRAPHIC</p>
+                      <a href="product-detail.html?product=sivappu-rebel" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">SIVAPPU REBEL</p>
                       </a>
-                      <p class="product-card-sub">Men • Oversized</p>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=pachai-flow" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Pachai Flow" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="pachai-flow" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="pachai-flow" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=pachai-flow" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">PACHAI FLOW</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=neelam-static" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="Neelam Static" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="neelam-static" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="neelam-static" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=neelam-static" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">NEELAM STATIC</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=bhoomi-brown" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0" alt="Bhoomi Brown" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="bhoomi-brown" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="bhoomi-brown" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=bhoomi-brown" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">BHOOMI BROWN</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="acid-wash">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=karuppu-core" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Karuppu Core" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="karuppu-core" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="karuppu-core" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=karuppu-core" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">KARUPPU CORE</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="plain">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=plain-black" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8" alt="Plain Black" loading="lazy" />
+                        <div class="product-badge glass-card">ESSENTIAL</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="plain-black" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="plain-black" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=plain-black" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">PLAIN BLACK</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Essential</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,299</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="plain">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=plain-red" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ" alt="Plain Red" loading="lazy" />
+                        <div class="product-badge glass-card">ESSENTIAL</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="plain-red" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="plain-red" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=plain-red" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">PLAIN RED</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Essential</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,299</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="terrain">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=azure-calm" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Azure Calm" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="azure-calm" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="azure-calm" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=azure-calm" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">AZURE CALM</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="terrain">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=olive-form" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Olive Form" loading="lazy" />
+                        <div class="product-badge glass-card">240 GSM</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="olive-form" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="olive-form" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=olive-form" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">OLIVE FORM</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Oversized</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="motorist">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=ktm-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="KTM" loading="lazy" />
+                        <div class="product-badge glass-card">NEW</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="ktm-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="ktm-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=ktm-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">KTM</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Graphic</p>
                     </div>
                     <span class="product-card-price" style="font-size:1.2rem;">₹1,799</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Product 4 -->
-              <div class="col-sm-6 col-xl-4">
+              <div class="col-sm-6 col-xl-4" data-category="motorist">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=zenith-oversized" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8"
-                             alt="Zenith Oversized Tee" loading="lazy" />
-                      <div class="product-badge glass-card">NEW</div>
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=mustang-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0" alt="Mustang" loading="lazy" />
+                        <div class="product-badge glass-card">NEW</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="zenith-oversized" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="zenith-oversized" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="mustang-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="mustang-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=zenith-oversized" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">ZENITH OVERSIZED</p>
+                      <a href="product-detail.html?product=mustang-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">MUSTANG</p>
                       </a>
-                      <p class="product-card-sub">Unisex • Oversized</p>
+                      <p class="product-card-sub">Unisex • Graphic</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,799</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="motorist">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=kawasaki-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Kawasaki" loading="lazy" />
+                        <div class="product-badge glass-card">2 COLOURS</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="kawasaki-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="kawasaki-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=kawasaki-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">KAWASAKI</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Graphic</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,799</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="motorist">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=mclaren-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8" alt="McLaren" loading="lazy" />
+                        <div class="product-badge glass-card">2 COLOURS</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="mclaren-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="mclaren-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=mclaren-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">MCLAREN</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Graphic</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,799</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="fan-edition">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=acdc-band-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ" alt="AC/DC Band" loading="lazy" />
+                        <div class="product-badge glass-card">FAN EDITION</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="acdc-band-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="acdc-band-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=acdc-band-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">AC/DC BAND</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Licensed</p>
                     </div>
                     <span class="product-card-price" style="font-size:1.2rem;">₹1,699</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Product 5 -->
-              <div class="col-sm-6 col-xl-4">
+              <div class="col-sm-6 col-xl-4" data-category="classic-cartoon">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=vortex-wash" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0"
-                             alt="Vortex Wash Tee" loading="lazy" />
-                      <div class="product-badge glass-card">240 GSM</div>
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=tom-and-jerry-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Tom and Jerry" loading="lazy" />
+                        <div class="product-badge glass-card">LIMITED PRINT</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="vortex-wash" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="vortex-wash" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="tom-and-jerry-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="tom-and-jerry-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=vortex-wash" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">VORTEX WASH</p>
+                      <a href="product-detail.html?product=tom-and-jerry-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">TOM AND JERRY</p>
                       </a>
-                      <p class="product-card-sub">Men • Oversized</p>
+                      <p class="product-card-sub">Unisex • Licensed</p>
                     </div>
-                    <span class="product-card-price" style="font-size:1.2rem;">₹1,849</span>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
                   </div>
                 </div>
               </div>
-
-              <!-- Product 6 -->
-              <div class="col-sm-6 col-xl-4">
+              <div class="col-sm-6 col-xl-4" data-category="classic-cartoon">
                 <div class="product-card" style="min-width:0;">
                   <div class="kk-card-media">
-<a href="product-detail.html?product=ignition" class="text-decoration-none">
-                    <div class="product-card-image orange-glow-hover">
-                      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I"
-                             alt="Ignition Tee" loading="lazy" />
-                      <div class="product-badge glass-card">HOT</div>
-                      <div class="product-card-hover-btn">
-                        <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
-                          <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
-                        </span>
+                    <a href="product-detail.html?product=senal-de-respecto" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="Señal De Respecto" loading="lazy" />
+                        <div class="product-badge glass-card">LIMITED PRINT</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </a>
-<button class="kk-bookmark" data-product-id="ignition" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
-<button class="kk-quick-add" data-product-id="ignition" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
-</div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="senal-de-respecto" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="senal-de-respecto" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <a href="product-detail.html?product=ignition" class="text-decoration-none">
-                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">IGNITION TEE</p>
+                      <a href="product-detail.html?product=senal-de-respecto" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">SEÑAL DE RESPECTO</p>
                       </a>
-                      <p class="product-card-sub">Unisex • Oversized</p>
+                      <p class="product-card-sub">Unisex • Graphic</p>
                     </div>
-                    <span class="product-card-price" style="font-size:1.2rem;">₹1,949</span>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,599</span>
                   </div>
                 </div>
               </div>
-
+              <div class="col-sm-6 col-xl-4" data-category="special-edition">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=believe-skull-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0" alt="Believe (Skull)" loading="lazy" />
+                        <div class="product-badge glass-card">LIMITED</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="believe-skull-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="believe-skull-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=believe-skull-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">BELIEVE (SKULL)</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Special Edition</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,699</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="special-edition">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=racer-tee" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Racer" loading="lazy" />
+                        <div class="product-badge glass-card">LIMITED</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="racer-tee" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="racer-tee" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=racer-tee" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">RACER</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Special Edition</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,699</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="womens">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=be-happy-crop" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8" alt="Be Happy" loading="lazy" />
+                        <div class="product-badge glass-card">NEW</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="be-happy-crop" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="be-happy-crop" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=be-happy-crop" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">BE HAPPY</p>
+                      </a>
+                      <p class="product-card-sub">Women's • Cropped</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,299</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="womens">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=butterfly-crop" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ" alt="Butterfly" loading="lazy" />
+                        <div class="product-badge glass-card">NEW</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="butterfly-crop" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="butterfly-crop" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=butterfly-crop" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">BUTTERFLY</p>
+                      </a>
+                      <p class="product-card-sub">Women's • Cropped</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,299</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-4" data-category="festive">
+                <div class="product-card" style="min-width:0;">
+                  <div class="kk-card-media">
+                    <a href="product-detail.html?product=onam-collection" class="text-decoration-none">
+                      <div class="product-card-image orange-glow-hover">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Onam Collection" loading="lazy" />
+                        <div class="product-badge glass-card">FESTIVE</div>
+                        <div class="product-card-hover-btn">
+                          <span class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="width:100%; font-size:11px;">
+                            <span class="material-symbols-outlined" style="font-size:16px;">visibility</span> View Details
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                    <button class="kk-bookmark" data-product-id="onam-collection" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>
+                    <button class="kk-quick-add" data-product-id="onam-collection" aria-label="Quick add to cart"><span class="material-symbols-outlined" style="font-size:20px;">add</span></button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                      <a href="product-detail.html?product=onam-collection" class="text-decoration-none">
+                        <p class="product-card-name" style="font-size:1rem; color:#fff; margin-bottom:0;">ONAM COLLECTION</p>
+                      </a>
+                      <p class="product-card-sub">Unisex • Festive Edition</p>
+                    </div>
+                    <span class="product-card-price" style="font-size:1.2rem;">₹1,499</span>
+                  </div>
+                </div>
+              </div>
             </div><!-- end product grid row -->
 
             <!-- Load more -->

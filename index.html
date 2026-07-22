@@ -24,12 +24,26 @@
 
 <body>
 
+  <!-- ═══ SCROLLING ANNOUNCEMENT BAR ═══ -->
+  <div class="kk-marquee" aria-hidden="true">
+    <div class="kk-marquee-track">
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+    </div>
+  </div>
+  <!-- ═══ END ANNOUNCEMENT BAR ═══ -->
   <!-- Noise texture overlay (purely decorative) -->
   <div class="noise-overlay" aria-hidden="true"></div>
   
 
   <!-- Scroll progress bar -->
-  <div id="scrollProgress" style="position:fixed;top:0;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
+  <div id="scrollProgress" style="position:fixed;top:34px;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
 
   <!-- Custom cursor dot (desktop) -->
   <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
@@ -96,13 +110,14 @@
     <!-- ═══ HERO SECTION ═══ -->
     <section class="hero-section" aria-label="Hero">
 
-      <!-- Background model image -->
+      <!-- Atmospheric background — industrial texture, drifting orange
+           light, dark gradient. Replaces the old flat photo per the
+           premium redesign brief ("instead of a flat image, create an
+           atmospheric background"). -->
       <div class="hero-image-wrap" aria-hidden="true">
-        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMk5DksX2bHtI3_tMqgFtJeZfUjExTrfmgGXi5gJ_BjVKqGhPbjWCAfM34aQhIvcN1WSIelZblEaAQ91RUfqlqjzRtscyZ4_pcbGL5Lz74c_uIyqwUdqDefggyktO1thcgbzSva6sT8EmHF7qHGiUhxc_SnqKoei7J0vRyJ5pVpaot9TLaTi0OJm_JEGEHO8DHLgsvV6S8TPPjzpT2a_O-wCgnyZ-BLIK7lN6xdnE-nNQPbAT1HIc-RY4mrGmgOUkg6tGLcLeBY7I"
-             alt="Editorial model wearing Klozet Kaaran streetwear" />
+        <div class="hero-atmosphere"></div>
         <div class="hero-image-fade" aria-hidden="true"></div>
         <div class="hero-image-bottom-fade" aria-hidden="true"></div>
-        <!-- Orange ambient glow -->
         <div class="hero-ambient-glow" aria-hidden="true"></div>
       </div>
 
@@ -115,71 +130,88 @@
               WEAR YOUR<br />
               <span style="color:#f58220;">ATTITUDE.</span>
             </h1>
-            <p style="color:rgba(255,255,255,0.4);font-size:1.15rem;font-weight:300;max-width:420px;line-height:1.7;margin-bottom:3rem;">
-              Premium oversized t-shirts crafted for everyday street culture. Engineered with 240 GSM heavy cotton for those who lead, never follow.
+            <p style="color:rgba(255,255,255,0.4);font-size:1.1rem;font-weight:300;max-width:400px;line-height:1.6;margin-bottom:3rem;">
+              Premium oversized tees. Limited drops. Built for those who lead.
             </p>
             <div class="d-flex flex-sm-row flex-column gap-3">
               <a href="services.html" class="btn-kk-primary">Explore Collection</a>
-              <a href="services.html" class="btn-kk-outline">New Drops</a>
+              <a href="services.html" class="btn-kk-outline">Latest Drop</a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Floating glass cards (desktop only) — hover any card to reveal
-           its top-selling products as a fanning deck you can click into. -->
-      <div class="hero-float-card glass-card animate-float" style="top:20%;right:10%;" data-category="anime">
-        <span class="label-overline mb-1" style="font-size:9px;">Premium Art</span>
-        <h4>ANIME</h4>
+      <!-- Explore Collections — three collections orbiting continuously
+           around a center point. One is always front-and-center at full
+           size/brightness; the other two recede smaller and dimmer to
+           the sides. Keeps cycling on its own — hover pauses it so you
+           can actually read and click. Pure CSS animation (GPU-friendly,
+           no JS needed to drive the motion itself). -->
+      <div class="hero-orbit-zone" aria-label="Explore collections">
+        <p class="hero-orbit-label">Explore Collections</p>
 
-        <div class="card-product-deck" aria-label="Top selling Anime tees">
-          <a href="product-detail.html?product=neon-drift" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67PobdSVuCMgSxnyGKdgqTHnV5zsXXhJew5fRrDqhupEwY6E_xN2LHPFWVAaEwXgsOYXaOAPL7YcozvwDiHHRg1SrUbA0qNwfzdDoMVpxpIsIw165uXXJu-jQU0CFijO6Z5ZcvXnYtLRABnmZno82RVnnUi79qLGRkbVMQZqZCGNr6pnWEBsuDNS6Dv3eTG81lgGSxlyP2KOXI8RncVfNH53ixzeRrmNO4EOlGVcaDmffUFvQhwe17jBU6xJJiM9S0oxQ" alt="Neon Drift Tee" loading="lazy" />
-            <span class="deck-item-name">Neon Drift Tee</span>
-            <span class="deck-item-price">₹1,599</span>
+        <div class="hero-orbit">
+          <div class="hero-orbit-hub" aria-hidden="true"></div>
+
+          <a href="services.html#acid-wash" class="hero-orbit-item hero-orbit-item--rust">
+            <div class="hero-orbit-card">
+              <div class="hero-orbit-top">
+                <span class="hero-orbit-num">01</span>
+                <span class="material-symbols-outlined hero-orbit-icon">layers</span>
+              </div>
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Acid Wash collection" loading="lazy" />
+              <p class="hero-orbit-statement">Engineered<br />Fade</p>
+              <div class="hero-orbit-bottom">
+                <div>
+                  <p class="hero-orbit-name">Acid Wash</p>
+                  <p class="hero-orbit-tag">Oversized Edit</p>
+                </div>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </div>
+            </div>
           </a>
-          <a href="product-detail.html?product=ignition" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Ignition Tee" loading="lazy" />
-            <span class="deck-item-name">Ignition Tee</span>
-            <span class="deck-item-price">₹1,949</span>
+
+          <a href="services.html#motorist" class="hero-orbit-item hero-orbit-item--steel">
+            <div class="hero-orbit-card">
+              <div class="hero-orbit-top">
+                <span class="hero-orbit-num">02</span>
+                <span class="material-symbols-outlined hero-orbit-icon">layers</span>
+              </div>
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0" alt="Motorist Edition collection" loading="lazy" />
+              <p class="hero-orbit-statement">Built for<br />Speed</p>
+              <div class="hero-orbit-bottom">
+                <div>
+                  <p class="hero-orbit-name">Motorist Edition</p>
+                  <p class="hero-orbit-tag">Racing Capsule</p>
+                </div>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="services.html#classic-cartoon" class="hero-orbit-item hero-orbit-item--gold">
+            <div class="hero-orbit-card">
+              <div class="hero-orbit-top">
+                <span class="hero-orbit-num">03</span>
+                <span class="material-symbols-outlined hero-orbit-icon">layers</span>
+              </div>
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="Classic Cartoon collection" loading="lazy" />
+              <p class="hero-orbit-statement">Frame by<br />Frame</p>
+              <div class="hero-orbit-bottom">
+                <div>
+                  <p class="hero-orbit-name">Classic Cartoon</p>
+                  <p class="hero-orbit-tag">Limited Print</p>
+                </div>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </div>
+            </div>
           </a>
         </div>
-      </div>
 
-      <div class="hero-float-card glass-card animate-float-delayed" style="top:50%;right:35%;" data-category="minimal">
-        <span class="label-overline mb-1" style="font-size:9px;">Timeless</span>
-        <h4 style="font-size:1.5rem;">MINIMAL</h4>
-
-        <div class="card-product-deck" aria-label="Top selling Minimal tees">
-          <a href="product-detail.html?product=zenith-oversized" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGAmTyrsAC4Uanis5IrW6_k0go4xoAFiVS8jpBDJ3TPW-QyZ6M5A1evxnIbZdGgYUmSRbUI6z5s7C-I5hiQyy2mouqPLT21sF6Vwufeo5RK2Mg5T4BltNjzGLRA7kNVX-9OFBm_qzYemlMVBezOpYQGfgyJI2fPEZcsWYg13hHSG_5KZwA55aKi31vB_dH2CXcn3qoavUe5yKIiyhE04lgKEZ0-v_qKfDB7blAHaxK2gR4r2U5kdsWAfhCXyYSXuNpkaD6E4yGeO8" alt="Zenith Oversized Tee" loading="lazy" />
-            <span class="deck-item-name">Zenith Oversized</span>
-            <span class="deck-item-price">₹1,699</span>
-          </a>
-          <a href="product-detail.html?product=urban-zen" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7-6LCxmny2X2aubS-0LYfQ4tWhJrlLIsAyowvGmXkDSxZzxklNrlC2vz-de-OPjfPAxRy3JcnvhT9krwgObJc7kqiyWn0KAWxcVEXQ65XDqC_UwfW0a4pskQcGlWzOHkoiN6HUejBal6qvhLLgGq7VC_aF8MmbIEPpe7mWS7Vg6rud7TBi2lzCtdWPmmDbYMaNoRalloAOoX6EtNF7ihAXpyn3Q4_oUZieOscMeoUj0z_yWYumMd6wVhSUgUzORWBsO5YlpUuZWc" alt="Urban Zen Tee" loading="lazy" />
-            <span class="deck-item-name">Urban Zen Tee</span>
-            <span class="deck-item-price">₹1,499</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="hero-float-card glass-card animate-float-slow" style="bottom:20%;right:15%;" data-category="graphic">
-        <span class="label-overline mb-1" style="font-size:9px;">Identity</span>
-        <h4>GRAPHIC</h4>
-
-        <div class="card-product-deck" aria-label="Top selling Graphic tees">
-          <a href="product-detail.html?product=vintage-graphic" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="Vintage Graphic Tee" loading="lazy" />
-            <span class="deck-item-name">Vintage Graphic</span>
-            <span class="deck-item-price">₹1,799</span>
-          </a>
-          <a href="product-detail.html?product=vortex-wash" class="deck-item">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkXlCwvJ2QBT4lkb150GrHWdvSmqc8hAy7bRq9LjoUFMLCsY2HvYCtqSpqc4z8wfJ7p4BknfOgRXbuiKs2m1s4YcqGB7K7THvIX6AC7oHcveHVmcmwMo9q9F-GV7CRDA1bAsoy7jEe2anepKXIOPxV2cZ1d329TymCPTDYHGFmbF1Tzvju2EIfAMaZgeYyBEeFhFGTBLGQmSn-UexRHDPPvag_xOvB86KDUYS5k9iuGVtM5HaiiaIo6tJv7xroQWr6qpfwZxfqgE0" alt="Vortex Wash Tee" loading="lazy" />
-            <span class="deck-item-name">Vortex Wash</span>
-            <span class="deck-item-price">₹1,849</span>
-          </a>
-        </div>
+        <p class="hero-orbit-hint">
+          <span class="material-symbols-outlined">touch_app</span>
+          Click a collection to explore the full drop
+        </p>
       </div>
 
       <!-- Scroll indicator -->
@@ -192,19 +224,25 @@
     <!-- ═══ END HERO ═══ -->
 
 
-    <!-- ═══ BRAND STORY ═══ -->
+    <!-- ═══ DROP DASHBOARD ═══
+         Replaces the old "Brand Story" text+image section. Built from
+         sections 1–5 of the reference brief (live drop spotlight, value
+         props, authenticity badge, special edition spotlight) — sections
+         6–7 (live purchase feed, aggregate community stats) were
+         deliberately left out since they'd need real order/review data
+         to not be misleading; can be added once those numbers are real. -->
     <section class="section-gap" style="background:var(--color-background);overflow:hidden;">
       <div class="container-fluid px-site">
-        <div class="row align-items-center g-5">
+        <div class="row align-items-start g-5">
 
-          <!-- Text -->
-          <div class="col-lg-6 reveal">
+          <!-- Left: brand statement (unchanged from before) -->
+          <div class="col-lg-5 reveal">
             <h2 class="section-headline mb-4">
               DESIGNED FOR THE <span class="text-outline">STREETS.</span><br />
               BUILT FOR <em style="color:#f58220;font-style:italic;">COMFORT.</em>
             </h2>
             <div class="orange-accent-bar mb-5"></div>
-            <p style="color:rgba(255,255,255,0.5);font-size:1.1rem;font-weight:300;line-height:1.8;max-width:480px;margin-bottom:2rem;">
+            <p style="color:rgba(255,255,255,0.5);font-size:1.1rem;font-weight:300;line-height:1.8;max-width:420px;margin-bottom:2rem;">
               Every piece is an editorial statement. We don't just sell apparel; we curate the urban silhouette. Our fabrics are sourced for durability, and our fits are engineered for presence.
             </p>
             <a href="about.html" class="d-inline-flex align-items-center gap-2" style="color:#fff;font-weight:700;font-size:12px;letter-spacing:0.3em;text-transform:uppercase;text-decoration:none;">
@@ -213,24 +251,99 @@
             </a>
           </div>
 
-          <!-- Image -->
-          <div class="col-lg-6 reveal" style="transition-delay:0.2s;">
-            <div class="brand-image-frame">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8BN1P-3Rin_QxhBEW2OkIX2H8STwAW7WZsdFeFL3TplEJx87tFLUREsYyiUH8w78xdQk2aygBOxLDDu7EjXdcDMMpTOkg7ZdnPgwOr1NukoFn1JKMC0m6OiU8DFIbAn9VK153fl6Z3aAomXlUUfxjC2hmhPfJdkGC-o0EXnY3Iud77aoJ69t_T6T_glAyzeZ69_AQM5FofQS6BztJ6AjqSLBN45jLXlMA7O5-Tq9DtvVvbrlit3a4rigEj-xg261Xlwcxb8"
-                   alt="Klozet Kaaran brand craft and fabric quality" />
-              <div class="brand-image-inner-border" aria-hidden="true"></div>
-            </div>
-            <!-- GSM badge -->
-            <div class="glass-card d-none d-md-block brand-gsm-card p-4" aria-label="240 GSM Heavy Cotton">
-              <span class="count-up" data-target="240" data-suffix="" style="font-family:var(--font-headline);font-size:3.5rem;font-weight:900;color:#f58220;line-height:1;">240</span>
-              <p style="color:#fff;font-size:11px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;margin-top:0.25rem;margin-bottom:0;">GSM Heavy Cotton</p>
+          <!-- Right: 2x2 dashboard grid -->
+          <div class="col-lg-7 reveal" style="transition-delay:0.15s;">
+            <div class="kk-dash-grid">
+
+              <!-- 01. Live Drop Status -->
+              <div class="kk-dash-panel">
+                <div class="kk-dash-panel-head">
+                  <span class="kk-dash-panel-num">01</span>
+                  <span class="kk-dash-panel-title">Live Drop Status</span>
+                </div>
+                <div class="kk-dash-drop">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtHvt4ZxFFhaM7XofUoCHCnjRaU1GAM9zCBtakmLn0go0LmTWCuDuKxfvormrYcpJu5I1m6_p_SQgPp9Tq_3DAUMdYtbzdPmwF75Q4lYlld6oZjWCPSmnPJ4rajfbPtnp8FpvD-eUTtsJJmCmCJfRHTIwceK8QV6iJlzCfn3o2g6wzuUUkHWSE--feIV10uo7mzeQ41w6Mz2agQeEf45GH28GXbH03KCPIm0PDmkXbI6X1rQAmTtimZhxS_Wkxb6gRpN14i2Aifrs" alt="Karuppu Core Tee" loading="lazy" />
+                  <div>
+                    <p class="kk-dash-drop-name">Karuppu Core</p>
+                    <p class="kk-dash-drop-sub">Acid Wash · Oversized Tee</p>
+                    <!-- Manually-set stock count — update by hand, not
+                         live-synced to real inventory. -->
+                    <p class="kk-dash-stock">Only <strong>24</strong> left</p>
+                  </div>
+                </div>
+                <a href="product-detail.html?product=karuppu-core" class="kk-dash-cta">
+                  Shop Now <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+              </div>
+
+              <!-- 02. Why Klozet Kaaran -->
+              <div class="kk-dash-panel">
+                <div class="kk-dash-panel-head">
+                  <span class="kk-dash-panel-num">02</span>
+                  <span class="kk-dash-panel-title">Why Klozet Kaaran</span>
+                </div>
+                <div class="kk-dash-values">
+                  <div class="kk-dash-value">
+                    <span class="material-symbols-outlined">layers</span>
+                    <p>240 GSM<br />Premium Fabric</p>
+                  </div>
+                  <div class="kk-dash-value">
+                    <span class="material-symbols-outlined">lock_clock</span>
+                    <p>Limited Drops<br />Never Restocked</p>
+                  </div>
+                  <div class="kk-dash-value">
+                    <span class="material-symbols-outlined">straighten</span>
+                    <p>Oversized Fit<br />Street Ready</p>
+                  </div>
+                  <div class="kk-dash-value">
+                    <span class="material-symbols-outlined">content_cut</span>
+                    <p>Durable Stitching<br />Built to Last</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 03. Certificate of Authenticity -->
+              <div class="kk-dash-panel">
+                <div class="kk-dash-panel-head">
+                  <span class="kk-dash-panel-num">03</span>
+                  <span class="kk-dash-panel-title">Certificate of Authenticity</span>
+                </div>
+                <div class="kk-dash-cert">
+                  <span class="material-symbols-outlined kk-dash-cert-icon">verified</span>
+                  <div>
+                    <p class="kk-dash-cert-title">Every Piece. Verified.</p>
+                    <p class="kk-dash-cert-desc">Genuine Klozet Kaaran product — no imitations, no shortcuts.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 04. Special Edition -->
+              <div class="kk-dash-panel">
+                <div class="kk-dash-panel-head">
+                  <span class="kk-dash-panel-num">04</span>
+                  <span class="kk-dash-panel-title">Special Edition</span>
+                </div>
+                <div class="kk-dash-drop">
+                  <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5y4xVLrhuIu9-sn2cE7LvwzPBsSCCpGD3665jMSPty5vtjoraZd0lCg7FXN6nmSR8il3DCCcpHPAOAi1CqcXBABeCZMTEO_3DytiqQYLHan4loO5E7SRmWIAGcy-6VF4fn5wz5b1iGslTGK9vuSdWNRJiGjxxbfwdi6R1jw6FeE8dk1P16ahBd_I" alt="Lava Rust Tee" loading="lazy" />
+                  <div>
+                    <p class="kk-dash-drop-name">Lava Rust</p>
+                    <p class="kk-dash-drop-sub">Acid Wash · ₹1,599</p>
+                    <p class="kk-dash-stock">Only <strong>12</strong> left</p>
+                  </div>
+                </div>
+                <a href="product-detail.html?product=lava-rust" class="kk-dash-cta">
+                  Explore <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+              </div>
+
             </div>
           </div>
 
         </div>
       </div>
     </section>
-    <!-- ═══ END BRAND STORY ═══ -->
+    <!-- ═══ END DROP DASHBOARD ═══ -->
+
 
 
     <!-- ═══ FEATURED COLLECTIONS ═══ -->
@@ -451,33 +564,10 @@
     <!-- ═══ END BEST SELLERS ═══ -->
 
 
-    <!-- ═══ WHY CHOOSE US ═══ -->
-    <section class="section-gap" style="background:var(--color-background);">
-      <div class="container-fluid px-site">
-        <div class="features-grid stagger-parent">
+    <!-- Note: the "Why Choose Us" value props now live in the
+         Drop Dashboard section above (panel 02) — removed the
+         standalone duplicate that used to be here. -->
 
-          <div class="feature-item">
-            <span class="material-symbols-outlined feature-icon">layers</span>
-            <h3 class="feature-title">240 GSM COTTON</h3>
-            <p class="feature-desc">Thicker than your average tee. Durable fabric that keeps its shape wash after wash.</p>
-          </div>
-
-          <div class="feature-item">
-            <span class="material-symbols-outlined feature-icon">straighten</span>
-            <h3 class="feature-title">OVERSIZED FIT</h3>
-            <p class="feature-desc">Meticulously cut silhouettes designed for the perfect boxy streetwear aesthetic.</p>
-          </div>
-
-          <div class="feature-item">
-            <span class="material-symbols-outlined feature-icon">ink_highlighter</span>
-            <h3 class="feature-title">HD SCREEN PRINTS</h3>
-            <p class="feature-desc">High-definition ink technology. Zero cracking, zero fading, maximum visual impact.</p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-    <!-- ═══ END WHY CHOOSE US ═══ -->
 
 
     <!-- ═══ INSTAGRAM GRID ═══ -->
