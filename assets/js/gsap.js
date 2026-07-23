@@ -14,20 +14,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ─── Staggered reveal for grid children ─── */
   /* Elements with class "stagger-parent" will have their
-     direct children revealed one by one. */
-  const staggerParents = document.querySelectorAll('.stagger-parent');
-
-  staggerParents.forEach(function (parent) {
+     direct children revealed one by one. Exposed as a function so
+     grids that render asynchronously (e.g. Collections page, built
+     by assets/js/collections-render.js once live product data has
+     loaded) can trigger the same reveal after their content exists —
+     previously this only ran once at DOMContentLoaded, before that
+     grid had any children yet, so the animation silently never fired
+     there. */
+  function applyStagger(parent) {
+    if (!parent) return;
     const children = parent.children;
 
-    // Start all children hidden
     Array.from(children).forEach(function (child, i) {
       child.style.opacity   = '0';
       child.style.transform = 'translateY(30px)';
       child.style.transition = `opacity 0.6s ease ${i * 0.12}s, transform 0.6s ease ${i * 0.12}s`;
     });
 
-    // Observe the parent; when it enters view, animate children in
     const staggerObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -41,7 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.05 });
 
     staggerObserver.observe(parent);
-  });
+  }
+  window.KK_applyStagger = applyStagger;
+
+  document.querySelectorAll('.stagger-parent').forEach(applyStagger);
 
   /* ─── Counter animation ─── */
   /* Any element with class "count-up" and data-target="N"

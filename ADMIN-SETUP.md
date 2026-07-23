@@ -45,10 +45,42 @@ browser).
 - **Home page**: its featured sections are hand-laid-out HTML by design
   (curated look), so a brand-new product won't automatically appear
   there. But any product already featured on Home will automatically
-  show "SOLD OUT" and the correct price if you change its stock/price
-  in the admin, and will disappear from Home if you delete it.
+  update its **image, price, and sold-out state**, and will disappear
+  from Home if you delete it. It's also clickable now — clicking a card
+  opens that product's page, not just the Add-to-Cart button.
 - **Product detail / cart / WhatsApp checkout message**: always read the
-  same catalog, so price and sold-out state stay correct everywhere.
+  same catalog, so image, price, name, description, and sold-out state
+  stay correct everywhere.
+
+## Multiple images per product
+
+Each product now supports 3–10+ images instead of just one. In the
+product table, click **Manage** under "Images" to:
+- Add an image (blank slot you can paste a URL into)
+- Paste several URLs at once (one per line) and add them all together
+- Reorder with ↑ / ↓
+- Remove one with ✕
+
+The first image in the list is always what shows as the thumbnail on
+Home and Collections. On the product detail page, all of them show as
+a click-through gallery (first one loads as the main image).
+
+If you leave a product with no images yet, it'll show a broken-image
+icon on the site until you add one — that's expected, not a bug.
+
+## Root cause of the "image doesn't update everywhere" issue (fixed)
+
+Previously, each page had its own leftover logic that only re-checked
+**price and stock** after an admin save — never the image, name,
+description, sizes, or colours. Collections page happened to look right
+because it's fully rebuilt from scratch on every load; Home and Product
+Detail were only ever "patched" for two fields, so an image change never
+showed there. That's fixed at the root: every page now reads
+`window.KK_PRODUCTS` — filled in from `/api/products` by
+`assets/js/stock-sync.js`, which is the **only** thing that fetches the
+catalog — and Product Detail's whole page now builds itself once, only
+after that data has arrived, instead of building early from stale
+bundled data and patching two fields on top of it.
 
 ## Notes / limits
 

@@ -97,21 +97,52 @@
     // Parse which product to show from the URL, e.g. product-detail.html?product=urban-zen
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('product') || 'heavyweight-tee';
-    const product = (window.KK_PRODUCTS || {})[productId];
 
     let selectedSize = null;
     let selectedColor = null;
+    let rendered = false; // guards against building the page twice
 
-    if (product) {
+    function showNotFound() {
+      document.getElementById('productTitle').innerText = 'PRODUCT NOT FOUND';
+      document.getElementById('productDesc').innerText = 'This item may have been removed. Head back to Collections to keep browsing.';
+      const addBtn = document.getElementById('addToCartBtn');
+      if (addBtn) { addBtn.disabled = true; addBtn.style.opacity = '0.4'; addBtn.style.pointerEvents = 'none'; }
+    }
+
+    // Thumbnail swap handler (called from inline onclick on generated thumbs)
+    function changeImage(element) {
+      document.getElementById('mainProductImage').src = element.src;
+      document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    // The single build of this page. Runs exactly once, only once the
+    // live catalog (assets/js/stock-sync.js) has resolved — so this
+    // always reads the same up-to-date product data every other page
+    // uses, never the bundled fallback. That's what fixes images/price/
+    // name/description showing stale values here after an admin edit.
+    function renderProduct() {
+      if (rendered) return;
+      rendered = true;
+
+      const product = (window.KK_PRODUCTS || {})[productId];
+      if (!product || product.active === false) {
+        showNotFound();
+        return;
+      }
+
       document.getElementById('productTitle').innerText = product.title;
       document.getElementById('productPrice').innerText = '₹' + product.price.toLocaleString('en-IN');
       document.getElementById('productCategory').innerText = product.category;
       document.getElementById('productDesc').innerText = product.desc;
 
-      // Main image + thumbnails
-      document.getElementById('mainProductImage').src = product.images[0];
+      // Main image + thumbnail gallery — supports any number of images
+      // (3–10 typical). images[0] is always the main/default photo.
+      const images = (product.images && product.images.length) ? product.images : [];
+      document.getElementById('mainProductImage').src = images[0] || '';
       const thumbRow = document.getElementById('thumbnailRow');
-      product.images.forEach((imgSrc, index) => {
+      thumbRow.innerHTML = '';
+      images.forEach((imgSrc, index) => {
         const col = document.createElement('div');
         col.className = 'col-3';
         col.innerHTML = `<img src="${imgSrc}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeImage(this)" />`;
@@ -119,8 +150,9 @@
       });
 
       // Size buttons — built from this product's own size list
-      selectedSize = product.sizes[0];
       const sizeContainer = document.getElementById('sizeContainer');
+      sizeContainer.innerHTML = '';
+      selectedSize = product.sizes[0];
       product.sizes.forEach((size, i) => {
         const btn = document.createElement('button');
         btn.className = 'size-btn' + (i === 0 ? ' active' : '');
@@ -133,10 +165,14 @@
         sizeContainer.appendChild(btn);
       });
 
-      // Color swatches — built from this product's own color list
+      // Color swatches — built from this product's own color list.
+      // Colors here don't carry their own images (this product model
+      // has one gallery per product, not per-variant), so switching
+      // color never touches the image gallery above.
+      const colorContainer = document.getElementById('colorContainer');
+      colorContainer.innerHTML = '';
       selectedColor = product.colors[0].name;
       document.getElementById('selectedColorName').textContent = selectedColor;
-      const colorContainer = document.getElementById('colorContainer');
       product.colors.forEach((color, i) => {
         const btn = document.createElement('button');
         btn.className = 'kk-color-swatch' + (i === 0 ? ' active' : '');
@@ -162,9 +198,18 @@
         document.getElementById('pdQtyValue').textContent = qty;
       });
 
+      // Sold out handling
+      const addBtn = document.getElementById('addToCartBtn');
+      const outOfStock = typeof product.stock === 'number' && product.stock <= 0;
+      addBtn.disabled = outOfStock;
+      addBtn.style.opacity = outOfStock ? '0.4' : '';
+      addBtn.style.pointerEvents = outOfStock ? 'none' : '';
+      if (outOfStock) addBtn.innerText = 'SOLD OUT';
+
       // Add to Cart — hands off to the shared cart engine (assets/js/cart.js),
-      // which opens the cart drawer and (eventually) builds the WhatsApp message.
-      document.getElementById('addToCartBtn').addEventListener('click', () => {
+      // which opens the cart drawer and builds the WhatsApp message from
+      // the same window.KK_PRODUCTS entry at checkout time.
+      addBtn.addEventListener('click', () => {
         window.KKCartAPI.addToCart(productId, selectedSize, selectedColor, qty);
       });
 
@@ -180,48 +225,13 @@
         refreshBookmarkIcon();
       });
       refreshBookmarkIcon();
-
-    } else {
-      document.getElementById('productTitle').innerText = 'PRODUCT NOT FOUND';
-      document.getElementById('productDesc').innerText = 'This item may have been removed. Head back to Collections to keep browsing.';
     }
 
-    // Thumbnail swap handler
-    function changeImage(element) {
-      document.getElementById('mainProductImage').src = element.src;
-      document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-      element.classList.add('active');
-    }
-
-    // Once stock-sync.js has pulled the admin-managed catalog (see
-    // assets/js/stock-sync.js), re-check this specific product for
-    // price changes, stock, or removal — the page above already
-    // rendered from the bundled defaults so it's never blank while
-    // that fetch is in flight.
-    document.addEventListener('kk:productsReady', () => {
-      const liveProduct = (window.KK_PRODUCTS || {})[productId];
-      const addBtn = document.getElementById('addToCartBtn');
-
-      if (!liveProduct || liveProduct.active === false) {
-        document.getElementById('productTitle').innerText = 'PRODUCT NOT FOUND';
-        document.getElementById('productDesc').innerText = 'This item may have been removed. Head back to Collections to keep browsing.';
-        if (addBtn) { addBtn.disabled = true; addBtn.style.opacity = '0.4'; addBtn.style.pointerEvents = 'none'; }
-        return;
-      }
-
-      const priceEl = document.getElementById('productPrice');
-      if (priceEl && typeof liveProduct.price === 'number') {
-        priceEl.innerText = '₹' + liveProduct.price.toLocaleString('en-IN');
-      }
-
-      const outOfStock = typeof liveProduct.stock === 'number' && liveProduct.stock <= 0;
-      if (addBtn) {
-        addBtn.disabled = outOfStock;
-        addBtn.style.opacity = outOfStock ? '0.4' : '';
-        addBtn.style.pointerEvents = outOfStock ? 'none' : '';
-        addBtn.innerText = outOfStock ? 'SOLD OUT' : addBtn.innerText === 'SOLD OUT' ? 'Add to Cart' : addBtn.innerText;
-      }
-    });
+    // stock-sync.js fires this once, after the live catalog (or the
+    // bundled fallback, if the API is unreachable) is in window.KK_PRODUCTS.
+    // We wait for it rather than building twice, so this page never shows
+    // a stale image/price for a moment and then "jumps" to the real one.
+    document.addEventListener('kk:productsReady', renderProduct);
   </script>
 
   <script src="assets/js/gsap.js"></script>

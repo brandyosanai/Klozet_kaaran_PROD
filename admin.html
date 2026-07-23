@@ -28,6 +28,19 @@
   .kk-admin-msg.err { background: rgba(122, 32, 32, 0.2); border: 1px solid #7a2020; color: #ffb3b3; display: block; }
   .kk-admin-row-inactive { opacity: 0.45; }
   #kkAdminGate { max-width: 420px; margin: 80px auto; text-align: center; }
+
+  /* Multi-image editor (expandable row under each product) */
+  .kk-img-count-btn { background: transparent; color: #fff; border: 1px solid var(--color-dimmer); padding: 5px 10px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; }
+  .kk-img-editor-row td { background: rgba(255,255,255,0.02); padding: 16px !important; }
+  .kk-img-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .kk-img-row { display: flex; align-items: center; gap: 8px; }
+  .kk-img-thumb { width: 48px; height: 48px; object-fit: cover; background: var(--color-surface-2); border: 1px solid var(--color-dimmer); flex-shrink: 0; }
+  .kk-img-row input { flex: 1; }
+  .kk-img-row button { background: transparent; border: 1px solid var(--color-dimmer); color: #fff; width: 28px; height: 28px; font-size: 0.75rem; cursor: pointer; flex-shrink: 0; }
+  .kk-img-row button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .kk-img-row button.kk-img-remove { border-color: #7a2020; color: #ffb3b3; }
+  .kk-img-bulk { display: flex; gap: 8px; align-items: flex-start; }
+  .kk-img-bulk textarea { flex: 1; background: var(--color-surface-2); border: 1px solid var(--color-dimmer); color: #fff; font-family: var(--font-body); font-size: 0.8rem; padding: 8px; min-height: 60px; }
 </style>
 </head>
 <body>
@@ -56,9 +69,12 @@
       </div>
     </div>
     <p style="color:var(--color-muted); font-size:0.75rem; margin-bottom:16px;">
-      Image URL accepts a direct image link, or a Google Drive share link
-      (file must be shared as "Anyone with the link") — Drive links are
-      converted automatically when you save.
+      Each product supports multiple images (3–10 typical). Click "Manage"
+      to add, remove, reorder, or paste several image URLs at once. The
+      first image is used as the thumbnail on Home and Collections; the
+      full set shows as a gallery on the product page. Direct image links
+      and Google Drive share links (file shared as "Anyone with the link")
+      both work — Drive links convert automatically.
     </p>
     <div style="overflow-x:auto;">
       <table class="kk-admin-table">
@@ -68,7 +84,7 @@
             <th>Collection</th>
             <th>Price (₹)</th>
             <th>Stock</th>
-            <th>Image URL</th>
+            <th>Images</th>
             <th>Active</th>
             <th></th>
           </tr>
@@ -85,7 +101,10 @@
       <div><label>Collection<br/><select class="kk-admin-input" id="kkNewCategory"></select></label></div>
       <div><label>Price (₹)<br/><input class="kk-admin-input" id="kkNewPrice" type="number" value="1599" /></label></div>
       <div><label>Stock<br/><input class="kk-admin-input" id="kkNewStock" type="number" value="25" /></label></div>
-      <div style="grid-column: 1 / -1;"><label>Image URL<br/><input class="kk-admin-input" id="kkNewImage" placeholder="https://... or a Google Drive share link" /></label></div>
+      <div style="grid-column: 1 / -1;">
+        <label>Image URLs (one per line, optional — leave blank for now and add later in "Manage")<br/>
+        <textarea class="kk-admin-input" id="kkNewImages" rows="3" placeholder="https://... or Drive link&#10;https://...&#10;(one per line)" style="resize:vertical;"></textarea></label>
+      </div>
       <div><label>Sizes (comma separated)<br/><input class="kk-admin-input" id="kkNewSizes" value="S,M,L,XL" /></label></div>
       <div><label>Colour name<br/><input class="kk-admin-input" id="kkNewColorName" value="Black" /></label></div>
       <div><label>Colour hex<br/><input class="kk-admin-input" id="kkNewColorHex" value="#141414" /></label></div>
@@ -170,6 +189,15 @@
     }).join("");
   }
 
+  const expandedImageRows = new Set(); // product ids whose image editor is currently open
+
+  function ensureImagesArray(p) {
+    if (!Array.isArray(p.images) || p.images.length === 0) {
+      p.images = p.image ? [p.image] : [];
+    }
+    return p.images;
+  }
+
   function renderRows() {
     const tbody = document.getElementById("kkAdminRows");
     const ids = Object.keys(catalog).sort(function (a, b) {
@@ -180,21 +208,28 @@
     tbody.innerHTML = ids.map(function (id) {
       const p = catalog[id];
       const inactive = p.active === false;
-      const imgVal = (p.images && p.images[0]) || "";
-      return (
+      const imgs = ensureImagesArray(p);
+      const row =
         '<tr data-id="' + id + '" class="' + (inactive ? "kk-admin-row-inactive" : "") + '">' +
           '<td><input class="kk-admin-input" data-field="title" value="' + (p.title || "").replace(/"/g, "&quot;") + '" /></td>' +
           '<td><select class="kk-admin-input" data-field="category">' + categoryOptions(p.category) + "</select></td>" +
           '<td><input class="kk-admin-input narrow" type="number" data-field="price" value="' + (p.price || 0) + '" /></td>' +
           '<td><input class="kk-admin-input narrow" type="number" data-field="stock" value="' + (typeof p.stock === "number" ? p.stock : 0) + '" /></td>' +
-          '<td><input class="kk-admin-input" data-field="image" style="min-width:180px;" placeholder="https://... or Drive link" value="' + imgVal.replace(/"/g, "&quot;") + '" /></td>' +
+          '<td><button type="button" class="kk-img-count-btn" data-action="toggle-images">' +
+            (imgs.length ? imgs.length + " image" + (imgs.length === 1 ? "" : "s") : "No images") + " — Manage" +
+          "</button></td>" +
           '<td><input type="checkbox" data-field="active" ' + (inactive ? "" : "checked") + " /></td>" +
           '<td><button class="kk-admin-btn danger" data-action="delete">Delete</button></td>' +
-        "</tr>"
-      );
+        "</tr>";
+
+      const editorRow = expandedImageRows.has(id)
+        ? '<tr class="kk-img-editor-row" data-editor-for="' + id + '"><td colspan="7">' + imageEditorHtml(id) + "</td></tr>"
+        : "";
+
+      return row + editorRow;
     }).join("");
 
-    tbody.querySelectorAll("tr").forEach(function (row) {
+    tbody.querySelectorAll("tr[data-id]").forEach(function (row) {
       const id = row.getAttribute("data-id");
 
       row.querySelectorAll("[data-field]").forEach(function (input) {
@@ -205,20 +240,105 @@
             row.classList.toggle("kk-admin-row-inactive", !input.checked);
           } else if (field === "price" || field === "stock") {
             catalog[id][field] = Number(input.value) || 0;
-          } else if (field === "image") {
-            const converted = convertDriveLink(input.value);
-            input.value = converted;
-            catalog[id].images = [converted];
           } else {
             catalog[id][field] = input.value;
           }
         });
       });
 
+      row.querySelector('[data-action="toggle-images"]').addEventListener("click", function () {
+        if (expandedImageRows.has(id)) expandedImageRows.delete(id);
+        else expandedImageRows.add(id);
+        renderRows();
+      });
+
       row.querySelector('[data-action="delete"]').addEventListener("click", function () {
         if (!confirm('Remove "' + catalog[id].title + '" from the catalog? This takes effect after Save Changes.')) return;
         delete catalog[id];
-        row.remove();
+        expandedImageRows.delete(id);
+        renderRows();
+      });
+    });
+
+    wireImageEditors();
+  }
+
+  // Builds the expandable "Manage images" panel for one product: a
+  // reorderable list of URL inputs (with thumbnail preview — shows the
+  // browser's broken-image icon until a real URL is entered, which is
+  // expected while images haven't been added yet), plus an add-one
+  // button and a paste-many-at-once box.
+  function imageEditorHtml(id) {
+    const imgs = catalog[id].images || [];
+    const rows = imgs.map(function (url, i) {
+      return (
+        '<div class="kk-img-row" data-index="' + i + '">' +
+          '<img class="kk-img-thumb" src="' + (url || "").replace(/"/g, "&quot;") + '" alt="" />' +
+          '<input class="kk-admin-input" data-role="url" value="' + (url || "").replace(/"/g, "&quot;") + '" placeholder="https://... or Drive link" />' +
+          '<button type="button" data-role="up" ' + (i === 0 ? "disabled" : "") + ' title="Move up">↑</button>' +
+          '<button type="button" data-role="down" ' + (i === imgs.length - 1 ? "disabled" : "") + ' title="Move down">↓</button>' +
+          '<button type="button" class="kk-img-remove" data-role="remove" title="Remove">✕</button>' +
+        "</div>"
+      );
+    }).join("");
+
+    return (
+      '<div class="kk-img-list" data-list-for="' + id + '">' + rows + "</div>" +
+      '<div style="display:flex; gap:8px; margin-bottom:12px;">' +
+        '<button type="button" class="kk-admin-btn secondary" data-role="add-one">+ Add Image</button>' +
+      "</div>" +
+      '<div class="kk-img-bulk">' +
+        '<textarea data-role="bulk" placeholder="Paste multiple image URLs here, one per line, then click Add All"></textarea>' +
+        '<button type="button" class="kk-admin-btn secondary" data-role="add-bulk" style="align-self:flex-start;">Add All</button>' +
+      "</div>"
+    );
+  }
+
+  function wireImageEditors() {
+    document.querySelectorAll(".kk-img-editor-row").forEach(function (editorRow) {
+      const id = editorRow.getAttribute("data-editor-for");
+      const list = editorRow.querySelector('[data-list-for="' + id + '"]');
+
+      list.querySelectorAll(".kk-img-row").forEach(function (rowEl) {
+        const idx = Number(rowEl.getAttribute("data-index"));
+
+        rowEl.querySelector('[data-role="url"]').addEventListener("change", function (e) {
+          const converted = convertDriveLink(e.target.value);
+          catalog[id].images[idx] = converted;
+          renderRows();
+        });
+
+        const upBtn = rowEl.querySelector('[data-role="up"]');
+        if (upBtn) upBtn.addEventListener("click", function () {
+          const arr = catalog[id].images;
+          [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+          renderRows();
+        });
+
+        const downBtn = rowEl.querySelector('[data-role="down"]');
+        if (downBtn) downBtn.addEventListener("click", function () {
+          const arr = catalog[id].images;
+          [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+          renderRows();
+        });
+
+        rowEl.querySelector('[data-role="remove"]').addEventListener("click", function () {
+          catalog[id].images.splice(idx, 1);
+          renderRows();
+        });
+      });
+
+      editorRow.querySelector('[data-role="add-one"]').addEventListener("click", function () {
+        catalog[id].images.push("");
+        renderRows();
+      });
+
+      editorRow.querySelector('[data-role="add-bulk"]').addEventListener("click", function () {
+        const textarea = editorRow.querySelector('[data-role="bulk"]');
+        const urls = textarea.value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+        urls.forEach(function (u) { catalog[id].images.push(convertDriveLink(u)); });
+        textarea.value = "";
+        renderRows();
       });
     });
   }
@@ -266,8 +386,11 @@
       if (catalog[id]) id = id + "-" + Math.floor(Math.random() * 1000);
 
       const sizes = document.getElementById("kkNewSizes").value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-      const rawImage = document.getElementById("kkNewImage").value.trim();
-      const image = rawImage ? convertDriveLink(rawImage) : "https://placehold.co/600x750?text=" + encodeURIComponent(title);
+      const images = document.getElementById("kkNewImages").value
+        .split("\n")
+        .map(function (s) { return s.trim(); })
+        .filter(Boolean)
+        .map(convertDriveLink);
       catalog[id] = {
         id: id,
         title: title,
@@ -276,13 +399,14 @@
         active: true,
         category: document.getElementById("kkNewCategory").value,
         desc: "",
-        images: [image],
+        images: images, // left empty if none pasted — shows a broken image until added later via "Manage"
         sizes: sizes.length ? sizes : ["S", "M", "L", "XL"],
         colors: [{ name: document.getElementById("kkNewColorName").value.trim() || "Black", hex: document.getElementById("kkNewColorHex").value.trim() || "#141414" }],
       };
 
       form.style.display = "none";
       document.getElementById("kkNewTitle").value = "";
+      document.getElementById("kkNewImages").value = "";
       renderRows();
     });
   }

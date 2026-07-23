@@ -309,9 +309,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Recomputed every call so cards rendered dynamically from the
     // live catalog (see assets/js/collections-render.js) are picked
     // up, not just whatever was in the static HTML at page load.
-    const gridItems = Array.from(productGrid.children).filter(function (el) {
-      return el.hasAttribute('data-category');
-    });
+    // Cards now live inside per-category .kk-collection-group wrappers
+    // (see collections-render.js), so this looks at any depth rather
+    // than only direct children.
+    const groups = Array.from(productGrid.querySelectorAll('.kk-collection-group'));
+    const gridItems = Array.from(productGrid.querySelectorAll('[data-category]'));
 
     function applyFilter(filter) {
       let visibleCount = 0;
@@ -319,6 +321,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const matches = filter === 'all' || item.getAttribute('data-category') === filter;
         item.style.display = matches ? '' : 'none';
         if (matches) visibleCount++;
+      });
+
+      // Hide a whole category section (heading included) when every
+      // card inside it has been filtered out — so picking one
+      // collection doesn't leave a stack of empty headings behind.
+      groups.forEach(function (group) {
+        const hasVisible = Array.from(group.querySelectorAll('[data-category]')).some(function (item) {
+          return item.style.display !== 'none';
+        });
+        group.style.display = hasVisible ? '' : 'none';
       });
 
       if (productCountEl) productCountEl.textContent = String(visibleCount);
@@ -345,8 +357,15 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    const activeChip = collectionGroup.querySelector('.filter-chip-btn.active') || collectionGroup.querySelector('.filter-chip-btn');
-    if (activeChip) applyFilter(activeChip.getAttribute('data-filter'));
+    const hashFilter = (window.location.hash || '').replace('#', '');
+    const hashChip = hashFilter && collectionGroup.querySelector('.filter-chip-btn[data-filter="' + hashFilter + '"]');
+    const activeChip = hashChip || collectionGroup.querySelector('.filter-chip-btn.active') || collectionGroup.querySelector('.filter-chip-btn');
+    if (activeChip) {
+      collectionGroup.querySelectorAll('.filter-chip-btn').forEach(function (c) { c.classList.remove('active'); });
+      activeChip.classList.add('active');
+      applyFilter(activeChip.getAttribute('data-filter'));
+      if (hashChip) activeChip.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   initCollectionFilter();

@@ -93,6 +93,41 @@ function getProductsByCollection(collectionKey) {
 }
 window.KK_getProductsByCollection = getProductsByCollection;
 
+/* ---------- Reusable lookups (used by Home's dynamic sections,
+   assets/js/home-dynamic.js) so lookup logic isn't duplicated
+   per-section. All read from window.KK_PRODUCTS, same as Collections
+   — this is the single shared product source for the whole site. */
+
+function getProductById(id) {
+  return (window.KK_PRODUCTS || {})[id] || null;
+}
+window.KK_getProductById = getProductById;
+
+function getProductByName(name) {
+  if (!name) return null;
+  const target = name.trim().toLowerCase();
+  return (
+    Object.values(window.KK_PRODUCTS || {}).find(
+      (p) => (p.title || "").trim().toLowerCase() === target
+    ) || null
+  );
+}
+window.KK_getProductByName = getProductByName;
+
+function getFirstProductInCollection(collectionKey) {
+  return getProductsByCollection(collectionKey)[0] || null;
+}
+window.KK_getFirstProductInCollection = getFirstProductInCollection;
+
+// No "featured" flag exists in the schema yet, so this returns the
+// first N active products in catalog order. Swap the implementation
+// later for a real `featured` flag without changing any caller.
+function getFeaturedProducts(limit) {
+  const all = Object.values(window.KK_PRODUCTS || {}).filter((p) => p.active !== false);
+  return typeof limit === "number" ? all.slice(0, limit) : all;
+}
+window.KK_getFeaturedProducts = getFeaturedProducts;
+
 /* ================================================
    LIVE CATALOG OVERRIDE
    ================================================

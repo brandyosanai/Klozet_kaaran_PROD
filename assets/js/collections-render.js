@@ -8,6 +8,15 @@
    window.KK_PRODUCTS (which stock-sync.js keeps up to date
    with whatever the admin panel has saved).
 
+   Products are grouped into headed sections by category, in a
+   fixed display order, matching the sidebar filter chips:
+   Acid Wash -> Plain -> Terrain -> Printed Collection (Motorist
+   Edition) -> Fan Edition -> Classic Cartoon -> Special Edition ->
+   Women's -> Festive. A category with zero active products simply
+   doesn't render a section (no empty headings). Any category not in
+   this list (e.g. a new one added later) still renders, appended at
+   the end, using its label from window.KK_COLLECTIONS.
+
    Runs on "kk:productsReady" (fired by stock-sync.js) so it
    always has the live catalog before it builds anything.
    No-ops on any page that doesn't have #productGrid.
@@ -15,6 +24,22 @@
 
 (function () {
   "use strict";
+
+  // Fixed display order + heading text for each section. "heading" is
+  // literal display copy (kept separate from window.KK_COLLECTIONS.label,
+  // which is still what the sidebar filter chips and Home page use) —
+  // both are free to say different things without touching each other.
+  const CATEGORY_ORDER = [
+    { key: "acid-wash", heading: "Acid Wash Collection" },
+    { key: "plain", heading: "Plain Collection" },
+    { key: "terrain", heading: "Terrain Collection" },
+    { key: "motorist", heading: "Printed Collection", subheading: "Motorist Edition" },
+    { key: "fan-edition", heading: "Fan Edition" },
+    { key: "classic-cartoon", heading: "Classic Cartoon Collection" },
+    { key: "special-edition", heading: "Special Edition" },
+    { key: "womens", heading: "Women's Collection" },
+    { key: "festive", heading: "Festive Edition" },
+  ];
 
   function formatRupees(n) {
     return "₹" + Number(n).toLocaleString("en-IN");
@@ -24,6 +49,11 @@
     return String(str).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
+  }
+
+  function collectionLabel(key) {
+    const collections = window.KK_COLLECTIONS || {};
+    return (collections[key] && collections[key].label) || key;
   }
 
   function cardHtml(p) {
@@ -70,17 +100,53 @@
     );
   }
 
+  function groupHtml(entry, products) {
+    if (!products.length) return ""; // no empty headings for categories with nothing active in them
+    return (
+      '<div class="kk-collection-group" data-category-group="' + entry.key + '" style="margin-bottom:48px;">' +
+        '<div style="display:flex; align-items:baseline; gap:10px; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);">' +
+          '<h3 style="font-family:var(--font-headline); text-transform:uppercase; letter-spacing:0.03em; font-size:1.3rem; margin:0; color:#fff;">' + entry.heading + "</h3>" +
+          (entry.subheading
+            ? '<span style="color:var(--color-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em;">' + entry.subheading + "</span>"
+            : "") +
+        "</div>" +
+        '<div class="row g-4">' + products.map(cardHtml).join("") + "</div>" +
+      "</div>"
+    );
+  }
+
   function render() {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
 
-    const products = Object.values(window.KK_PRODUCTS || {}).filter(function (p) {
+    const active = Object.values(window.KK_PRODUCTS || {}).filter(function (p) {
       return p.active !== false;
     });
 
-    grid.innerHTML = products.map(cardHtml).join("");
+    const byCategory = {};
+    active.forEach(function (p) {
+      (byCategory[p.category] = byCategory[p.category] || []).push(p);
+    });
+
+    const knownKeys = CATEGORY_ORDER.map(function (e) { return e.key; });
+    const extraEntries = Object.keys(byCategory)
+      .filter(function (k) { return knownKeys.indexOf(k) === -1; })
+      .map(function (k) { return { key: k, heading: collectionLabel(k) }; });
+
+    const sections = CATEGORY_ORDER.concat(extraEntries);
+
+    grid.innerHTML = sections
+      .map(function (entry) { return groupHtml(entry, byCategory[entry.key] || []); })
+      .join("");
 
     document.dispatchEvent(new CustomEvent("kk:gridRendered"));
+
+    // Re-run the site's stagger reveal now that this grid actually has
+    // content — see assets/js/gsap.js for why this couldn't just rely
+    // on the page-load pass.
+    if (window.KK_applyStagger) {
+      document.querySelectorAll(".kk-collection-group").forEach(window.KK_applyStagger);
+    }
 
     // Cart.js wires up [data-product-id] buttons via one delegated
     // listener at the document level (per its DOM CONTRACT), so

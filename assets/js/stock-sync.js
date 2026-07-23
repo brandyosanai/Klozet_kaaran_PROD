@@ -1,28 +1,38 @@
 /* ================================================
    KLOZET KAARAN — LIVE STOCK SYNC
    ================================================
-   Loads right after products-data.js and before cart.js/main.js
-   on every page. Pulls whatever the admin last saved from
-   /admin.html (stored via /api/products) and:
+   This is the ONLY place that fetches the product catalog on any
+   page. It runs once per page load, replaces window.KK_PRODUCTS
+   with whatever the admin last saved (via /admin.html -> /api/products),
+   then fires "kk:productsReady" exactly once. Every other script
+   (collections-render.js, product-detail.html, cart.js, product-nav.js,
+   this file's own reflectOnStaticCards) reads window.KK_PRODUCTS —
+   nothing else fetches or holds its own copy. That's what keeps
+   Home / Collections / Product Detail / Cart in sync: they're all
+   reading the same in-memory object, updated in one place.
 
-   1. Replaces window.KK_PRODUCTS with the live catalog, so any
-      new/edited/removed product is reflected everywhere that
-      reads window.KK_PRODUCTS (cart, product-detail, and the
-      Collections grid which is now rendered from this data).
-   2. Sweeps every hand-written product card already in the HTML
-      (home page, Collections page fallback) and:
-        - hides the card if that product was deleted or set
-          inactive by the admin
-        - shows a SOLD OUT ribbon + disables Add-to-Cart if
-          stock is 0
-        - updates the visible price if the admin changed it
-   3. Fires a "kk:productsReady" event once done, so other
-      scripts (the Collections grid renderer, main.js's filter
-      init) know it's safe to build/rebuild from live data.
+   assets/js/products-data.js (loaded just before this file) provides
+   the bundled fallback/seed data. It is NOT a second source of truth —
+   it's only ever used until this script's fetch resolves, or if the
+   API is unreachable. Once the fetch succeeds, this file REPLACES
+   window.KK_PRODUCTS entirely with the live catalog.
 
-   If the fetch fails or nothing has been saved yet, the page
-   just keeps using the bundled defaults from products-data.js —
-   nothing breaks.
+   What this file does, in order:
+   1. Fetch the live catalog once.
+   2. Normalize it (see normalizeProducts) so old-format products
+      (a bare "image" string instead of an "images" array) don't
+      break anything — converted automatically, in memory only.
+   3. Replace window.KK_PRODUCTS with the normalized live data.
+   4. Sweep every hand-written product card already in the page's
+      HTML (Home page sections, and any static fallback markup) and
+      sync image, price, and sold-out state to match.
+   5. Fire "kk:productsReady" — this is the ONE signal every other
+      script waits for before building/rendering product UI, so nothing
+      on the page ever builds twice or shows two different states.
+
+   If the fetch fails or nothing has been saved yet, the page keeps
+   using the bundled defaults from products-data.js — nothing breaks,
+   it just means "no admin edits have landed yet."
 ================================================ */
 
 (function () {
@@ -31,6 +41,25 @@
   function formatRupees(n) {
     return "₹" + Number(n).toLocaleString("en-IN");
   }
+
+  // Issue 7 backward-compatibility: some very old records (or a bad
+  // manual edit) might still have `image: "url"` instead of
+  // `images: ["url", ...]`. Normalize once, in memory, so every
+  // consumer can always assume `images` is an array.
+  function normalizeProducts(products) {
+    Object.keys(products || {}).forEach(function (id) {
+      const p = products[id];
+      if (!p) return;
+      if ((!Array.isArray(p.images) || p.images.length === 0) && p.image) {
+        p.images = [p.image];
+      }
+      if (!Array.isArray(p.images)) {
+        p.images = [];
+      }
+    });
+    return products;
+  }
+  window.KK_normalizeProducts = normalizeProducts;
 
   async function fetchLiveCatalog() {
     try {
@@ -97,6 +126,18 @@
         if (priceEl) priceEl.textContent = formatRupees(product.price);
       }
 
+      // Update the product image if the admin changed it. Every card
+      // type here has exactly one product photo, so the first <img>
+      // inside the card is always the right one. This was the root
+      // cause of "image doesn't update on Home" — this pass simply
+      // never touched <img src> before.
+      if (product.images && product.images[0]) {
+        const imgEl = card.querySelector("img");
+        if (imgEl && imgEl.getAttribute("src") !== product.images[0]) {
+          imgEl.src = product.images[0];
+        }
+      }
+
       // Sold out handling.
       const outOfStock = typeof product.stock === "number" && product.stock <= 0;
       let ribbon = card.querySelector(".kk-soldout-ribbon");
@@ -133,9 +174,13 @@
   }
 
   async function init() {
+    // Normalize the bundled seed data too, in case it's ever hand-edited
+    // into the old single-image format.
+    normalizeProducts(window.KK_PRODUCTS || {});
+
     const live = await fetchLiveCatalog();
     if (live && live.products) {
-      window.KK_PRODUCTS = live.products;
+      window.KK_PRODUCTS = normalizeProducts(live.products);
       if (live.collections) window.KK_COLLECTIONS = live.collections;
     }
     reflectOnStaticCards();
