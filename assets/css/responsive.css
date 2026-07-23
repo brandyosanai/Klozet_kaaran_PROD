@@ -11,6 +11,14 @@
     --section-gap:    80px;
   }
 
+  /* Mobile-only: hide a text-heavy, low-product-density section to
+     shorten the scroll distance before reaching real products.
+     Desktop keeps it exactly as it was — this is a display:none
+     override, not a content change, so nothing here touches desktop. */
+  #identitySelects {
+    display: none;
+  }
+
   /* Navigation */
   #main-nav {
     padding: 1rem var(--margin-mobile);
@@ -79,11 +87,6 @@
     padding-right: var(--margin-mobile);
   }
 
-  /* Drop banner title */
-  .drop-title {
-    font-size: clamp(60px, 15vw, 120px);
-  }
-
   /* Collection card content */
   .collection-card-content { left: 1.5rem; bottom: 1.5rem; }
 
@@ -127,9 +130,6 @@
   /* Blog grid single col */
   .blog-grid-col { flex: 0 0 100%; max-width: 100%; }
 
-  /* Drop banner */
-  .drop-banner { height: 60vh; }
-  .drop-title { font-size: clamp(50px, 20vw, 90px); letter-spacing: 0.05em; }
   .btn-kk-primary { padding: 1rem 2rem; }
 
   /* Page header — was calculated before the marquee bar existed;
@@ -154,7 +154,6 @@
 /* ─── Small phones (< 400px) ─── */
 @media (max-width: 399.98px) {
   .hero-headline { font-size: 40px; }
-  .drop-title { font-size: 52px; }
   .page-header-title { font-size: 38px; }
   .insta-grid { grid-template-columns: repeat(2, 1fr); }
 }
