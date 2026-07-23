@@ -1,6 +1,6 @@
 # Catalog Admin — Setup Guide
 
-This adds a `/admin.html` page where you can add/remove products and edit
+This project adds a `/admin.html` page where you can add/remove products and edit
 price + stock count without touching code. Changes save to Cloudflare KV
 and show up on Home and Collections for every visitor (not just your
 browser).
