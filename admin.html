@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Catalog Admin | KLOZET KAARAN</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=Anybody:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/style.css" />
+<style>
+  body { padding: 40px 24px 120px; max-width: 1100px; margin: 0 auto; }
+  .kk-admin-card { background: var(--color-surface); border: 1px solid var(--color-dimmer); padding: 24px; margin-bottom: 24px; }
+  .kk-admin-h1 { font-family: var(--font-headline); font-size: 1.8rem; margin-bottom: 4px; }
+  .kk-admin-sub { color: var(--color-muted); font-size: 0.85rem; margin-bottom: 24px; }
+  table.kk-admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  table.kk-admin-table th { text-align: left; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; color: var(--color-muted); padding: 8px 6px; border-bottom: 1px solid var(--color-dimmer); }
+  table.kk-admin-table td { padding: 8px 6px; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: middle; }
+  .kk-admin-input { width: 100%; background: var(--color-surface-2); border: 1px solid var(--color-dimmer); color: #fff; padding: 6px 8px; font-family: var(--font-body); font-size: 0.85rem; }
+  .kk-admin-input.narrow { width: 80px; }
+  select.kk-admin-input { min-width: 130px; }
+  .kk-admin-btn { background: var(--color-primary); color: #000; border: none; padding: 10px 20px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.75rem; cursor: pointer; }
+  .kk-admin-btn.secondary { background: transparent; color: #fff; border: 1px solid var(--color-dimmer); }
+  .kk-admin-btn.danger { background: #7a2020; color: #fff; padding: 6px 10px; font-size: 0.7rem; }
+  .kk-admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .kk-admin-msg { padding: 10px 14px; font-size: 0.8rem; margin-bottom: 16px; display: none; }
+  .kk-admin-msg.ok { background: rgba(76, 175, 80, 0.15); border: 1px solid #4caf50; color: #a5d6a7; display: block; }
+  .kk-admin-msg.err { background: rgba(122, 32, 32, 0.2); border: 1px solid #7a2020; color: #ffb3b3; display: block; }
+  .kk-admin-row-inactive { opacity: 0.45; }
+  #kkAdminGate { max-width: 420px; margin: 80px auto; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="kkAdminGate">
+  <h1 class="kk-admin-h1">Catalog Admin</h1>
+  <p class="kk-admin-sub">Enter the admin password to manage stock, prices, and products.</p>
+  <input type="password" id="kkAdminPw" class="kk-admin-input" placeholder="Admin password" style="margin-bottom:12px;" />
+  <br />
+  <button class="kk-admin-btn" id="kkAdminUnlock">Unlock</button>
+  <p id="kkGateMsg" class="kk-admin-msg" style="margin-top:16px;"></p>
+</div>
+
+<div id="kkAdminApp" style="display:none;">
+  <h1 class="kk-admin-h1">Catalog Admin</h1>
+  <p class="kk-admin-sub">Edits here update the live site — Home and Collections pull from this data. Nothing goes live until you click "Save Changes".</p>
+
+  <p id="kkAdminMsg" class="kk-admin-msg"></p>
+
+  <div class="kk-admin-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <strong>Products</strong>
+      <div>
+        <button class="kk-admin-btn secondary" id="kkAddProductBtn">+ Add Product</button>
+        <button class="kk-admin-btn" id="kkSaveBtn">Save Changes</button>
+      </div>
+    </div>
+    <p style="color:var(--color-muted); font-size:0.75rem; margin-bottom:16px;">
+      Image URL accepts a direct image link, or a Google Drive share link
+      (file must be shared as "Anyone with the link") — Drive links are
+      converted automatically when you save.
+    </p>
+    <div style="overflow-x:auto;">
+      <table class="kk-admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Collection</th>
+            <th>Price (₹)</th>
+            <th>Stock</th>
+            <th>Image URL</th>
+            <th>Active</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="kkAdminRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="kk-admin-card" id="kkAddForm" style="display:none;">
+    <strong style="display:block; margin-bottom:16px;">New Product</strong>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:16px;">
+      <div><label>Title<br/><input class="kk-admin-input" id="kkNewTitle" placeholder="e.g. Ocean Drift" /></label></div>
+      <div><label>Collection<br/><select class="kk-admin-input" id="kkNewCategory"></select></label></div>
+      <div><label>Price (₹)<br/><input class="kk-admin-input" id="kkNewPrice" type="number" value="1599" /></label></div>
+      <div><label>Stock<br/><input class="kk-admin-input" id="kkNewStock" type="number" value="25" /></label></div>
+      <div style="grid-column: 1 / -1;"><label>Image URL<br/><input class="kk-admin-input" id="kkNewImage" placeholder="https://... or a Google Drive share link" /></label></div>
+      <div><label>Sizes (comma separated)<br/><input class="kk-admin-input" id="kkNewSizes" value="S,M,L,XL" /></label></div>
+      <div><label>Colour name<br/><input class="kk-admin-input" id="kkNewColorName" value="Black" /></label></div>
+      <div><label>Colour hex<br/><input class="kk-admin-input" id="kkNewColorHex" value="#141414" /></label></div>
+    </div>
+    <button class="kk-admin-btn" id="kkAddProductConfirm">Add to list</button>
+    <button class="kk-admin-btn secondary" id="kkAddProductCancel">Cancel</button>
+  </div>
+
+  <p style="color:var(--color-muted); font-size:0.75rem;">
+    New products appear automatically on the Collections page. The Home page's
+    featured sections are hand-curated, so a brand-new product won't show there
+    until it's added to that page's HTML — but stock/price/sold-out status for
+    anything already featured on Home stays in sync automatically.
+  </p>
+</div>
+
+<script src="assets/js/products-data.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  let catalog = {};       // working copy of products, keyed by id
+  let collections = window.KK_COLLECTIONS || {};
+  let adminToken = "";
+
+  function slugify(str) {
+    return String(str).toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  }
+
+  // Google Drive "share" links (…/file/d/ID/view, …/open?id=ID, etc.)
+  // point at a viewer page, not the actual image bytes, so an <img>
+  // tag can't load them directly. This rewrites them to Drive's
+  // thumbnail endpoint, which does serve the raw image. The file
+  // still needs to be shared as "Anyone with the link" for this to work.
+  function convertDriveLink(url) {
+    if (!url) return url;
+    const trimmed = url.trim();
+    const patterns = [
+      /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/,
+      /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
+      /drive\.google\.com\/uc\?(?:export=view&)?id=([a-zA-Z0-9_-]+)/,
+      /drive\.google\.com\/thumbnail\?id=([a-zA-Z0-9_-]+)/,
+    ];
+    for (const re of patterns) {
+      const m = trimmed.match(re);
+      if (m) return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000";
+    }
+    return trimmed;
+  }
+
+  function showMsg(el, text, kind) {
+    el.textContent = text;
+    el.className = "kk-admin-msg " + kind;
+  }
+
+  async function loadCatalog() {
+    let live = null;
+    try {
+      const res = await fetch("/api/products", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.products && Object.keys(data.products).length) live = data;
+      }
+    } catch (e) { /* fall back below */ }
+
+    if (live) {
+      catalog = live.products;
+      if (live.collections) collections = live.collections;
+    } else {
+      // First time ever — seed from the bundled defaults so there's
+      // something to edit before anything has been saved.
+      catalog = JSON.parse(JSON.stringify(window.KK_PRODUCTS || {}));
+    }
+  }
+
+  function categoryOptions(selected) {
+    return Object.keys(collections).map(function (key) {
+      const label = collections[key].label || key;
+      return '<option value="' + key + '"' + (key === selected ? " selected" : "") + ">" + label + "</option>";
+    }).join("");
+  }
+
+  function renderRows() {
+    const tbody = document.getElementById("kkAdminRows");
+    const ids = Object.keys(catalog).sort(function (a, b) {
+      return (catalog[a].category || "").localeCompare(catalog[b].category || "") ||
+             (catalog[a].title || "").localeCompare(catalog[b].title || "");
+    });
+
+    tbody.innerHTML = ids.map(function (id) {
+      const p = catalog[id];
+      const inactive = p.active === false;
+      const imgVal = (p.images && p.images[0]) || "";
+      return (
+        '<tr data-id="' + id + '" class="' + (inactive ? "kk-admin-row-inactive" : "") + '">' +
+          '<td><input class="kk-admin-input" data-field="title" value="' + (p.title || "").replace(/"/g, "&quot;") + '" /></td>' +
+          '<td><select class="kk-admin-input" data-field="category">' + categoryOptions(p.category) + "</select></td>" +
+          '<td><input class="kk-admin-input narrow" type="number" data-field="price" value="' + (p.price || 0) + '" /></td>' +
+          '<td><input class="kk-admin-input narrow" type="number" data-field="stock" value="' + (typeof p.stock === "number" ? p.stock : 0) + '" /></td>' +
+          '<td><input class="kk-admin-input" data-field="image" style="min-width:180px;" placeholder="https://... or Drive link" value="' + imgVal.replace(/"/g, "&quot;") + '" /></td>' +
+          '<td><input type="checkbox" data-field="active" ' + (inactive ? "" : "checked") + " /></td>" +
+          '<td><button class="kk-admin-btn danger" data-action="delete">Delete</button></td>' +
+        "</tr>"
+      );
+    }).join("");
+
+    tbody.querySelectorAll("tr").forEach(function (row) {
+      const id = row.getAttribute("data-id");
+
+      row.querySelectorAll("[data-field]").forEach(function (input) {
+        const field = input.getAttribute("data-field");
+        input.addEventListener("change", function () {
+          if (field === "active") {
+            catalog[id].active = input.checked;
+            row.classList.toggle("kk-admin-row-inactive", !input.checked);
+          } else if (field === "price" || field === "stock") {
+            catalog[id][field] = Number(input.value) || 0;
+          } else if (field === "image") {
+            const converted = convertDriveLink(input.value);
+            input.value = converted;
+            catalog[id].images = [converted];
+          } else {
+            catalog[id][field] = input.value;
+          }
+        });
+      });
+
+      row.querySelector('[data-action="delete"]').addEventListener("click", function () {
+        if (!confirm('Remove "' + catalog[id].title + '" from the catalog? This takes effect after Save Changes.')) return;
+        delete catalog[id];
+        row.remove();
+      });
+    });
+  }
+
+  async function saveChanges() {
+    const msgEl = document.getElementById("kkAdminMsg");
+    const btn = document.getElementById("kkSaveBtn");
+    btn.disabled = true;
+    try {
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          "authorization": "Bearer " + adminToken,
+        },
+        body: JSON.stringify({ products: catalog, collections: collections }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showMsg(msgEl, data.error || "Save failed.", "err");
+      } else {
+        showMsg(msgEl, "Saved — changes are now live on the site.", "ok");
+      }
+    } catch (e) {
+      showMsg(msgEl, "Network error while saving.", "err");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function wireAddForm() {
+    const form = document.getElementById("kkAddForm");
+    document.getElementById("kkNewCategory").innerHTML = categoryOptions(Object.keys(collections)[0]);
+
+    document.getElementById("kkAddProductBtn").addEventListener("click", function () {
+      form.style.display = "block";
+    });
+    document.getElementById("kkAddProductCancel").addEventListener("click", function () {
+      form.style.display = "none";
+    });
+    document.getElementById("kkAddProductConfirm").addEventListener("click", function () {
+      const title = document.getElementById("kkNewTitle").value.trim();
+      if (!title) { alert("Give the product a title first."); return; }
+      let id = slugify(title);
+      if (catalog[id]) id = id + "-" + Math.floor(Math.random() * 1000);
+
+      const sizes = document.getElementById("kkNewSizes").value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      const rawImage = document.getElementById("kkNewImage").value.trim();
+      const image = rawImage ? convertDriveLink(rawImage) : "https://placehold.co/600x750?text=" + encodeURIComponent(title);
+      catalog[id] = {
+        id: id,
+        title: title,
+        price: Number(document.getElementById("kkNewPrice").value) || 0,
+        stock: Number(document.getElementById("kkNewStock").value) || 0,
+        active: true,
+        category: document.getElementById("kkNewCategory").value,
+        desc: "",
+        images: [image],
+        sizes: sizes.length ? sizes : ["S", "M", "L", "XL"],
+        colors: [{ name: document.getElementById("kkNewColorName").value.trim() || "Black", hex: document.getElementById("kkNewColorHex").value.trim() || "#141414" }],
+      };
+
+      form.style.display = "none";
+      document.getElementById("kkNewTitle").value = "";
+      renderRows();
+    });
+  }
+
+  document.getElementById("kkAdminUnlock").addEventListener("click", async function () {
+    const pw = document.getElementById("kkAdminPw").value;
+    const gateMsg = document.getElementById("kkGateMsg");
+    if (!pw) { showMsg(gateMsg, "Enter a password.", "err"); return; }
+
+    adminToken = pw;
+    await loadCatalog();
+    document.getElementById("kkAdminGate").style.display = "none";
+    document.getElementById("kkAdminApp").style.display = "block";
+    renderRows();
+    wireAddForm();
+    document.getElementById("kkSaveBtn").addEventListener("click", saveChanges);
+    // Real auth check happens on first Save (the PUT requires the
+    // correct password) — this just gets you into the editor.
+  });
+
+  document.getElementById("kkAdminPw").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") document.getElementById("kkAdminUnlock").click();
+  });
+})();
+</script>
+</body>
+</html>

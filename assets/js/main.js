@@ -303,7 +303,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const productGrid = document.getElementById('productGrid');
   const productCountEl = document.getElementById('productCount');
 
-  if (collectionGroup && productGrid) {
+  function initCollectionFilter() {
+    if (!collectionGroup || !productGrid) return;
+
+    // Recomputed every call so cards rendered dynamically from the
+    // live catalog (see assets/js/collections-render.js) are picked
+    // up, not just whatever was in the static HTML at page load.
     const gridItems = Array.from(productGrid.children).filter(function (el) {
       return el.hasAttribute('data-category');
     });
@@ -318,8 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (productCountEl) productCountEl.textContent = String(visibleCount);
 
-      // Empty state — shouldn't normally trigger since every real
-      // collection has at least one product, but kept as a safety net.
       let emptyMsg = productGrid.querySelector('.kk-filter-empty');
       if (visibleCount === 0) {
         if (!emptyMsg) {
@@ -333,16 +336,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    collectionGroup.querySelectorAll('.filter-chip-btn').forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        applyFilter(this.getAttribute('data-filter'));
+    if (!collectionGroup.dataset.kkBound) {
+      collectionGroup.dataset.kkBound = '1';
+      collectionGroup.querySelectorAll('.filter-chip-btn').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          applyFilter(this.getAttribute('data-filter'));
+        });
       });
-    });
+    }
 
-    // Initial state matches whichever chip loads as "active" (All, by default)
-    const initialChip = collectionGroup.querySelector('.filter-chip-btn.active') || collectionGroup.querySelector('.filter-chip-btn');
-    if (initialChip) applyFilter(initialChip.getAttribute('data-filter'));
+    const activeChip = collectionGroup.querySelector('.filter-chip-btn.active') || collectionGroup.querySelector('.filter-chip-btn');
+    if (activeChip) applyFilter(activeChip.getAttribute('data-filter'));
   }
+
+  initCollectionFilter();
+  // Rebuild the filter once the live-catalog-driven grid has rendered.
+  document.addEventListener('kk:gridRendered', initCollectionFilter);
 
   /* ================================================
      8. SIZE SELECTOR — Highlights the chosen size

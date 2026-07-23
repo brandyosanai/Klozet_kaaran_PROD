@@ -45,48 +45,62 @@ function img(i) { return IMG[i % IMG.length]; }
 window.KK_PRODUCTS = {
 
   // ─── 1. Acid Wash Collection (washed tees) ───
-  "lava-rust":          { id: "lava-rust", title: "Lava Rust", code: "001", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Burnt rust-orange, aged like it's already been worn in.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Lava Rust", hex: "#a4502c" }] },
-  "purple-isnt-basic":  { id: "purple-isnt-basic", title: "Purple Isn't Basic", code: "002", price: 1599, category: "acid-wash", desc: "Washed oversized tee. The one that started the conversation.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Purple", hex: "#6b4c9e" }] },
-  "sivappu-rebel":      { id: "sivappu-rebel", title: "Sivappu Rebel", code: "003", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Bold red, built to be seen.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Sivappu Red", hex: "#9e2b25" }] },
-  "pachai-flow":        { id: "pachai-flow", title: "Pachai Flow", code: "004", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Deep green, calm on the surface.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Pachai Green", hex: "#3f5c3f" }] },
-  "neelam-static":      { id: "neelam-static", title: "Neelam Static", code: "008", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Electric blue with a static-wash finish.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Neelam Blue", hex: "#2e4a7a" }] },
-  "bhoomi-brown":       { id: "bhoomi-brown", title: "Bhoomi Brown", code: "009", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Earth-brown, named for the ground it's built from.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Bhoomi Brown", hex: "#5b4636" }] },
-  "karuppu-core":       { id: "karuppu-core", title: "Karuppu Core", code: "010", price: 1599, category: "acid-wash", desc: "Washed oversized tee. Deep black core wash.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Karuppu Black", hex: "#1c1c1c" }] },
+  "lava-rust":          { id: "lava-rust", title: "Lava Rust", code: "001", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Burnt rust-orange, aged like it's already been worn in.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Lava Rust", hex: "#a4502c" }] },
+  "purple-isnt-basic":  { id: "purple-isnt-basic", title: "Purple Isn't Basic", code: "002", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. The one that started the conversation.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Purple", hex: "#6b4c9e" }] },
+  "sivappu-rebel":      { id: "sivappu-rebel", title: "Sivappu Rebel", code: "003", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Bold red, built to be seen.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Sivappu Red", hex: "#9e2b25" }] },
+  "pachai-flow":        { id: "pachai-flow", title: "Pachai Flow", code: "004", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Deep green, calm on the surface.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Pachai Green", hex: "#3f5c3f" }] },
+  "neelam-static":      { id: "neelam-static", title: "Neelam Static", code: "008", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Electric blue with a static-wash finish.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Neelam Blue", hex: "#2e4a7a" }] },
+  "bhoomi-brown":       { id: "bhoomi-brown", title: "Bhoomi Brown", code: "009", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Earth-brown, named for the ground it's built from.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Bhoomi Brown", hex: "#5b4636" }] },
+  "karuppu-core":       { id: "karuppu-core", title: "Karuppu Core", code: "010", price: 1599, stock: 25, active: true, category: "acid-wash", desc: "Washed oversized tee. Deep black core wash.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Karuppu Black", hex: "#1c1c1c" }] },
 
   // ─── 2. Plain Collection ───
-  "plain-black":        { id: "plain-black", title: "Plain Black", code: "006", price: 1299, category: "plain", desc: "Clean oversized essential tee. No print, all fit.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Black", hex: "#141414" }] },
-  "plain-red":          { id: "plain-red", title: "Plain Red", code: "007", price: 1299, category: "plain", desc: "Clean oversized essential tee. No print, all fit.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Red", hex: "#8c1c1c" }] },
+  "plain-black":        { id: "plain-black", title: "Plain Black", code: "006", price: 1299, stock: 25, active: true, category: "plain", desc: "Clean oversized essential tee. No print, all fit.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Black", hex: "#141414" }] },
+  "plain-red":          { id: "plain-red", title: "Plain Red", code: "007", price: 1299, stock: 25, active: true, category: "plain", desc: "Clean oversized essential tee. No print, all fit.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Red", hex: "#8c1c1c" }] },
 
   // ─── 3. Terrain Collection ───
-  "azure-calm":         { id: "azure-calm", title: "Azure Calm", code: "011", price: 1599, category: "terrain", desc: "Washed oversized tee. Calm, muted blue — the archive's quiet one.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Azure Calm", hex: "#4c7a9e" }] },
-  "olive-form":         { id: "olive-form", title: "Olive Form", code: "012", price: 1599, category: "terrain", desc: "Washed oversized tee. Military olive, built for the terrain.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Olive", hex: "#5c5c3d" }] },
+  "azure-calm":         { id: "azure-calm", title: "Azure Calm", code: "011", price: 1599, stock: 25, active: true, category: "terrain", desc: "Washed oversized tee. Calm, muted blue — the archive's quiet one.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Azure Calm", hex: "#4c7a9e" }] },
+  "olive-form":         { id: "olive-form", title: "Olive Form", code: "012", price: 1599, stock: 25, active: true, category: "terrain", desc: "Washed oversized tee. Military olive, built for the terrain.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Olive", hex: "#5c5c3d" }] },
 
   // ─── 4a. Printed Collection > Motorist Edition ───
-  "ktm-tee":            { id: "ktm-tee", title: "KTM", code: "0001", price: 1799, category: "motorist", desc: "Racing-inspired graphic tee.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
-  "mustang-tee":        { id: "mustang-tee", title: "Mustang", code: "0002", price: 1799, category: "motorist", desc: "Motorsport-inspired graphic tee.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
-  "kawasaki-tee":       { id: "kawasaki-tee", title: "Kawasaki", code: "0003", price: 1799, category: "motorist", desc: "Racing-inspired graphic tee. 2 colour options.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }, { name: "Racing Green", hex: "#2f4a34" }] },
-  "mclaren-tee":        { id: "mclaren-tee", title: "McLaren", code: "0004", price: 1799, category: "motorist", desc: "Puffy-print motorsport graphic tee. 2 colour options.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }, { name: "Papaya Orange", hex: "#ff8000" }] },
+  "ktm-tee":            { id: "ktm-tee", title: "KTM", code: "0001", price: 1799, stock: 25, active: true, category: "motorist", desc: "Racing-inspired graphic tee.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
+  "mustang-tee":        { id: "mustang-tee", title: "Mustang", code: "0002", price: 1799, stock: 25, active: true, category: "motorist", desc: "Motorsport-inspired graphic tee.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
+  "kawasaki-tee":       { id: "kawasaki-tee", title: "Kawasaki", code: "0003", price: 1799, stock: 25, active: true, category: "motorist", desc: "Racing-inspired graphic tee. 2 colour options.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }, { name: "Racing Green", hex: "#2f4a34" }] },
+  "mclaren-tee":        { id: "mclaren-tee", title: "McLaren", code: "0004", price: 1799, stock: 25, active: true, category: "motorist", desc: "Puffy-print motorsport graphic tee. 2 colour options.", images: [img(1)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }, { name: "Papaya Orange", hex: "#ff8000" }] },
 
   // ─── 4b. Printed Collection > Fan Edition ───
-  "acdc-band-tee":      { id: "acdc-band-tee", title: "AC/DC Band", price: 1699, category: "fan-edition", desc: "Licensed rock band graphic tee.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
+  "acdc-band-tee":      { id: "acdc-band-tee", title: "AC/DC Band", price: 1699, stock: 25, active: true, category: "fan-edition", desc: "Licensed rock band graphic tee.", images: [img(2)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
 
   // ─── 4c. Printed Collection > Classic Cartoon Collection ───
-  "tom-and-jerry-tee":  { id: "tom-and-jerry-tee", title: "Tom and Jerry", price: 1599, category: "classic-cartoon", desc: "Licensed classic-cartoon graphic tee.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
-  "senal-de-respecto":  { id: "senal-de-respecto", title: "Se\u00f1al De Respecto", price: 1599, category: "classic-cartoon", desc: "Minimal chest-print graphic tee.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
+  "tom-and-jerry-tee":  { id: "tom-and-jerry-tee", title: "Tom and Jerry", price: 1599, stock: 25, active: true, category: "classic-cartoon", desc: "Licensed classic-cartoon graphic tee.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
+  "senal-de-respecto":  { id: "senal-de-respecto", title: "Se\u00f1al De Respecto", price: 1599, stock: 25, active: true, category: "classic-cartoon", desc: "Minimal chest-print graphic tee.", images: [img(4)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
 
   // ─── 4d. Printed Collection > Special Edition ───
-  "believe-skull-tee":  { id: "believe-skull-tee", title: "Believe (Skull)", price: 1699, category: "special-edition", desc: "Bold skull graphic tee — limited run.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
-  "racer-tee":          { id: "racer-tee", title: "Racer", price: 1699, category: "special-edition", desc: "Motorsport special-edition graphic tee.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
+  "believe-skull-tee":  { id: "believe-skull-tee", title: "Believe (Skull)", price: 1699, stock: 25, active: true, category: "special-edition", desc: "Bold skull graphic tee — limited run.", images: [img(5)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
+  "racer-tee":          { id: "racer-tee", title: "Racer", price: 1699, stock: 25, active: true, category: "special-edition", desc: "Motorsport special-edition graphic tee.", images: [img(0)], sizes: ["S","M","L","XL"], colors: [{ name: "Jet Black", hex: "#141414" }] },
 
   // ─── 5a. Women's Collection > Crop Tops ───
-  "be-happy-crop":      { id: "be-happy-crop", title: "Be Happy", price: 1299, category: "womens", desc: "Women's cropped graphic tee.", images: [img(1)], sizes: ["S","M","L"], colors: [{ name: "Off White", hex: "#e9e5da" }] },
-  "butterfly-crop":     { id: "butterfly-crop", title: "Butterfly", price: 1299, category: "womens", desc: "Women's cropped graphic tee.", images: [img(2)], sizes: ["S","M","L"], colors: [{ name: "Off White", hex: "#e9e5da" }] },
+  "be-happy-crop":      { id: "be-happy-crop", title: "Be Happy", price: 1299, stock: 25, active: true, category: "womens", desc: "Women's cropped graphic tee.", images: [img(1)], sizes: ["S","M","L"], colors: [{ name: "Off White", hex: "#e9e5da" }] },
+  "butterfly-crop":     { id: "butterfly-crop", title: "Butterfly", price: 1299, stock: 25, active: true, category: "womens", desc: "Women's cropped graphic tee.", images: [img(2)], sizes: ["S","M","L"], colors: [{ name: "Off White", hex: "#e9e5da" }] },
 
   // ─── Festive Edition ───
-  "onam-collection":    { id: "onam-collection", title: "Onam Collection", price: 1499, category: "festive", desc: "Limited festive-edition oversized tee.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
+  "onam-collection":    { id: "onam-collection", title: "Onam Collection", price: 1499, stock: 25, active: true, category: "festive", desc: "Limited festive-edition oversized tee.", images: [img(3)], sizes: ["S","M","L","XL"], colors: [{ name: "Cream", hex: "#ded4bd" }] },
 };
 
 function getProductsByCollection(collectionKey) {
-  return Object.values(window.KK_PRODUCTS).filter((p) => p.category === collectionKey);
+  return Object.values(window.KK_PRODUCTS).filter(
+    (p) => p.category === collectionKey && p.active !== false
+  );
 }
 window.KK_getProductsByCollection = getProductsByCollection;
+
+/* ================================================
+   LIVE CATALOG OVERRIDE
+   ================================================
+   assets/js/stock-sync.js (loaded right after this file)
+   fetches the admin-managed catalog from /api/products and,
+   if present, REPLACES window.KK_PRODUCTS with it — so stock
+   counts, prices, and added/removed products managed from
+   /admin.html take effect everywhere without editing this file.
+   The data above is just the seed/fallback used until the
+   admin saves a catalog for the first time.
+================================================ */

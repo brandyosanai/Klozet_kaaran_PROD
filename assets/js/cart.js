@@ -536,4 +536,10 @@
     updateBadges();
     syncBookmarkButtons();
   });
+
+  // Re-sync bookmark icon state once the Collections grid has been
+  // (re)built from the live catalog (see assets/js/collections-render.js) —
+  // those cards are injected after DOMContentLoaded so they'd otherwise
+  // miss the initial bookmark-state pass above.
+  document.addEventListener("kk:gridRendered", syncBookmarkButtons);
 })();

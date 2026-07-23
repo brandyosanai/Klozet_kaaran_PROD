@@ -91,6 +91,7 @@
   </main>
 
   <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/stock-sync.js"></script>
   <script src="assets/js/cart.js"></script>
   <script>
     // Parse which product to show from the URL, e.g. product-detail.html?product=urban-zen
@@ -191,6 +192,36 @@
       document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
       element.classList.add('active');
     }
+
+    // Once stock-sync.js has pulled the admin-managed catalog (see
+    // assets/js/stock-sync.js), re-check this specific product for
+    // price changes, stock, or removal — the page above already
+    // rendered from the bundled defaults so it's never blank while
+    // that fetch is in flight.
+    document.addEventListener('kk:productsReady', () => {
+      const liveProduct = (window.KK_PRODUCTS || {})[productId];
+      const addBtn = document.getElementById('addToCartBtn');
+
+      if (!liveProduct || liveProduct.active === false) {
+        document.getElementById('productTitle').innerText = 'PRODUCT NOT FOUND';
+        document.getElementById('productDesc').innerText = 'This item may have been removed. Head back to Collections to keep browsing.';
+        if (addBtn) { addBtn.disabled = true; addBtn.style.opacity = '0.4'; addBtn.style.pointerEvents = 'none'; }
+        return;
+      }
+
+      const priceEl = document.getElementById('productPrice');
+      if (priceEl && typeof liveProduct.price === 'number') {
+        priceEl.innerText = '₹' + liveProduct.price.toLocaleString('en-IN');
+      }
+
+      const outOfStock = typeof liveProduct.stock === 'number' && liveProduct.stock <= 0;
+      if (addBtn) {
+        addBtn.disabled = outOfStock;
+        addBtn.style.opacity = outOfStock ? '0.4' : '';
+        addBtn.style.pointerEvents = outOfStock ? 'none' : '';
+        addBtn.innerText = outOfStock ? 'SOLD OUT' : addBtn.innerText === 'SOLD OUT' ? 'Add to Cart' : addBtn.innerText;
+      }
+    });
   </script>
 
   <script src="assets/js/gsap.js"></script>
