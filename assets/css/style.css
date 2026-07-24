@@ -1162,6 +1162,62 @@ h1, h2, h3, h4, h5, h6 {
 .form-input:focus { border-bottom-color: var(--color-primary); }
 .form-input:focus + .form-field-label { color: var(--color-primary); }
 
+/* Select elements reuse .form-input but need their own arrow/appearance
+   reset so they don't fall back to the browser's default select chrome,
+   which would clash with the rest of the form's minimal underline style. */
+select.form-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f58220' stroke-width='1.5' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 24px;
+  cursor: pointer;
+}
+select.form-input option {
+  background: var(--color-surface);
+  color: #fff;
+}
+
+/* Numbered section titles inside multi-question forms (Gifts/Bulk Order) */
+.form-section-title {
+  font-family: var(--font-headline);
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 2rem 0 1rem;
+}
+.form-field-group:first-of-type,
+form > .form-section-title:first-child {
+  margin-top: 0;
+}
+.form-optional-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-left: 0.5rem;
+}
+.form-note {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  background: rgba(245,130,32,0.06);
+  border-left: 2px solid var(--color-primary);
+  padding: 0.85rem 1rem;
+  margin: 0 0 1.5rem;
+}
+.form-footnote {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin: 1.25rem 0 0;
+  line-height: 1.6;
+}
+
 /* ─── Blog cards ─── */
 .blog-card {
   background: var(--color-surface);

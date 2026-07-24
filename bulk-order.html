@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KLOZET KAARAN Bulk & Customized T-Shirts — request a quote for bulk orders, custom prints, and branded merchandise." />
+  <title>Bulk & Customized T-Shirts | KLOZET KAARAN</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;700;800;900&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+
+  <!-- ═══ SCROLLING ANNOUNCEMENT BAR ═══ -->
+  <div class="kk-marquee" aria-hidden="true">
+    <div class="kk-marquee-track">
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+      <span>FREE SHIPPING ON ORDERS ABOVE ₹2,000</span><span class="kk-marquee-dot">•</span>
+      <span>NEW DROP: ACID WASH COLLECTION LIVE NOW</span><span class="kk-marquee-dot">•</span>
+      <span>240 GSM HEAVYWEIGHT COTTON. BUILT TO LAST</span><span class="kk-marquee-dot">•</span>
+      <span>ORDER VIA WHATSAPP — CONFIRMED IN MINUTES</span><span class="kk-marquee-dot">•</span>
+    </div>
+  </div>
+  <!-- ═══ END ANNOUNCEMENT BAR ═══ -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+  <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
+  <div id="scrollProgress" style="position:fixed;top:34px;left:0;height:2px;background:#f58220;z-index:9999;width:0;transition:width 0.1s;"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav id="main-nav" class="navbar navbar-expand-lg scrolled" aria-label="Main navigation">
+    <div class="container-fluid d-flex align-items-center justify-content-between" style="padding:0;">
+      <a class="navbar-brand" href="index.html">
+        <img src="assets/images/KKlogo.png" alt="KLOZET KAARAN" style="height:60px; width:auto; filter:brand;">
+      </a>
+      <button class="navbar-toggler d-lg-none" type="button" id="kkMobileToggle" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="material-symbols-outlined" id="kkMobileToggleIcon" style="color:#fff;font-size:28px;">menu</span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mx-auto gap-lg-4" id="navbarNav">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Collections</a></li>
+          <li class="nav-item"><a class="nav-link active" href="bulk-order.html" style="color:#fff!important;">Customized T-Shirts</a></li>
+          <li class="nav-item"><a class="nav-link" href="customized-gifts.html">Customized Gifts</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button id="kkWishlistBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Saved items">
+          <span class="material-symbols-outlined" style="font-size:24px;">bookmark_border</span>
+          <span class="kk-badge" id="kkWishlistBadge">0</span>
+        </button>
+        <button id="kkCartBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Cart">
+          <span class="material-symbols-outlined" style="font-size:24px;">shopping_cart</span>
+          <span class="kk-badge" id="kkCartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ SIDE SOCIAL BAR ═══ -->
+  <aside class="side-social d-none d-xl-flex" aria-label="Social links">
+    <span class="vertical-text">Exclusive Drops</span>
+    <a href="https://instagram.com/klozetkaaran" target="_blank" rel="noopener" aria-label="Instagram">
+      <img src="assets/images/instagram.png" alt="Instagram" style="height:20px; width:auto; display:inline-block;" />
+      <span>IG</span>
+    </a>
+    <a href="https://wa.me/919025130407" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <img src="assets/images/whatsapp.png" alt="WhatsApp" style="height:20px; width:auto;" />
+      <span>WA</span>
+    </a>
+  </aside>
+  <!-- ═══ END SIDE SOCIAL BAR ═══ -->
+  <main>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <h1 class="page-header-title reveal">BULK & CUSTOM ORDERS</h1>
+      <div class="page-header-divider reveal" style="transition-delay:0.15s;">
+        <div class="bar"></div>
+        <p>YOUR DESIGN. OUR FABRIC. NO MINIMUMS TOO SMALL TO ASK.</p>
+      </div>
+    </div>
+
+    <!-- ═══ WHAT WE OFFER ═══ -->
+    <section class="section-gap" style="background:var(--color-background);padding-top:0;">
+      <div class="container-fluid px-site">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center reveal">
+            <p style="color:rgba(255,255,255,0.6);font-size:1.05rem;line-height:1.9;">
+              Company merch, event tees, college fests, or your own label's first drop — same 240 GSM heavyweight cotton
+              and print quality as our own collections, printed with your logo, artwork, or design instead of ours.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ═══ END WHAT WE OFFER ═══ -->
+
+    <!-- ═══ BULK ORDER FORM ═══ -->
+    <section class="section-gap" style="background:var(--color-surface);padding-top:0;">
+      <div class="container-fluid px-site">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+
+            <div class="text-center mb-5 reveal">
+              <span class="label-overline mb-3">Request a Quote</span>
+              <h2 class="section-headline" style="font-size:clamp(1.8rem,4vw,2.75rem);">TELL US THE BRIEF</h2>
+              <p style="color:rgba(255,255,255,0.4);font-size:0.9rem;margin-top:0.5rem;">
+                These questions are a starting point — happy to adjust the form once we see what customers actually ask for.
+              </p>
+            </div>
+
+            <div class="position-relative">
+              <div class="contact-form-glow" aria-hidden="true"></div>
+              <div class="glass-card contact-form-panel">
+                <form id="bulkOrderForm" aria-label="Bulk and customized T-shirt order form">
+
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="boName">Name</label>
+                    <input type="text" id="boName" class="form-input" placeholder="YOUR NAME" required />
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <div class="form-field-group">
+                        <label class="form-field-label" for="boContact">Contact Number</label>
+                        <input type="tel" id="boContact" class="form-input" placeholder="10-DIGIT MOBILE NUMBER" required />
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-field-group">
+                        <label class="form-field-label" for="boCompany">Company <span class="form-optional-tag">Optional</span></label>
+                        <input type="text" id="boCompany" class="form-input" placeholder="COMPANY / BRAND / COLLEGE" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="boQuantity">Quantity</label>
+                    <input type="number" id="boQuantity" class="form-input" placeholder="HOW MANY PIECES?" min="1" required />
+                  </div>
+
+                  <div class="form-field-group">
+                    <label class="form-field-label" for="boDesign">Design Requirement</label>
+                    <textarea id="boDesign" class="form-input" placeholder="TELL US WHAT YOU'RE LOOKING FOR — GARMENT TYPE, COLORS, PRINT PLACEMENT, SIZES NEEDED" rows="4" style="resize:none;" required></textarea>
+                  </div>
+
+                  <p class="form-note">
+                    Have your logo, artwork, or reference images ready — you'll be able to attach them directly in the
+                    WhatsApp chat that opens once you submit this form below.
+                  </p>
+
+                  <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+                    <button type="submit" id="boSubmitBtn" data-intent="quote" class="btn-kk-primary d-flex align-items-center justify-content-center gap-2" style="flex:1;font-size:0.9rem;padding:1.2rem;">
+                      Request a Quote <span class="material-symbols-outlined">chat</span>
+                    </button>
+                    <button type="submit" id="boSubmitBtnOrder" data-intent="order" class="d-flex align-items-center justify-content-center gap-2" style="flex:1;font-size:0.9rem;padding:1.2rem;background:transparent;border:1px solid rgba(255,255,255,0.25);color:#fff;text-transform:uppercase;font-weight:700;letter-spacing:0.1em;">
+                      Place Bulk Order <span class="material-symbols-outlined">shopping_bag</span>
+                    </button>
+                  </div>
+
+                  <p class="form-footnote">
+                    We'll get back to you with pricing and turnaround time based on quantity and design complexity.
+                  </p>
+
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ═══ END BULK ORDER FORM ═══ -->
+
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="container-fluid px-site">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <img src="assets/images/KKlogo.png" alt="KLOZET KAARAN" style="height:48px;width:auto;margin-bottom:1rem;" />
+          <p class="footer-copy" style="max-width:320px;">Premium oversized streetwear, engineered for those who lead, never follow.</p>
+        </div>
+        <div class="col-6 col-lg-2">
+          <p class="footer-nav-title">SHOP</p>
+          <nav class="footer-nav">
+            <a href="services.html">New Arrivals</a>
+            <a href="services.html">Best Sellers</a>
+            <a href="bulk-order.html">Customized T-Shirts</a>
+            <a href="customized-gifts.html">Customized Gifts</a>
+          </nav>
+        </div>
+        <div class="col-6 col-lg-2">
+          <p class="footer-nav-title">SUPPORT</p>
+          <nav class="footer-nav">
+            <a href="contact.html">Shipping</a>
+            <a href="contact.html">Returns</a>
+            <a href="about.html">Size Guide</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+      </div>
+      <div class="footer-bottom d-flex flex-md-row flex-column justify-content-between align-items-center gap-3">
+        <p class="footer-copy mb-0">© 2024 KLOZET KAARAN. ENGINEERED FOR THE CULTURE.</p>
+        <div class="d-flex gap-4">
+          <a href="#" class="footer-copy" style="text-decoration:none;">Privacy</a>
+          <a href="#" class="footer-copy" style="text-decoration:none;">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/919025130407" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <span class="material-symbols-outlined" style="font-size:26px;">chat</span>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/custom-forms.js"></script>
+  <script src="assets/js/gsap.js"></script>
+</body>
+</html>
