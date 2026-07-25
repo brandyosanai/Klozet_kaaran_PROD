@@ -131,14 +131,12 @@ h1, h2, h3, h4, h5, h6 {
   padding: 1.5rem var(--margin-desktop);
   transition: all 0.4s ease-in-out;
   
-  /* Solid black bar spanning edge-to-edge at the very top */
-  background: #000000 !important;
-  background-color: #000000 !important;
+  /* Completely transparent background */
+  background: transparent !important;
+  background-color: transparent !important;
   
-  /* No border here — the marquee bar directly above already
-     provides a clean edge; a second faint line right underneath it
-     just reads as clutter rather than a deliberate one. */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* Removed drop shadow so there is no dark edge visible */
+  box-shadow: none !important;
   
   display: flex;
   align-items: center;
@@ -2340,4 +2338,17 @@ a { text-decoration: none; }
   .kk-mood-tile .kk-quick-add {
     opacity: 1;
   }
+}
+
+/* FORCE COMPLETE TRANSPARENCY & REMOVE BLUR */
+#main-nav,
+#main-nav *,
+.navbar,
+.header {
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  filter: none !important;
 }

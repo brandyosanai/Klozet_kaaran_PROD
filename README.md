@@ -169,3 +169,38 @@ When you're happy with changes made in a test repo, copy over only the specific 
 | Admin panel works locally but not live (or vice versa) | Local `.env` password and live `ADMIN_PASSWORD` are different — this is expected, not a bug, just don't confuse the two |
 | A brand-new product added via admin doesn't show on the Home page | Expected — Home's featured sections are hand-laid-out by design. New products appear automatically on Collections; only *already-featured* products on Home auto-update their image/price/stock |
 | Local dev shows a blank product catalog | You used a plain static server (Option A) instead of `wrangler pages dev` (Option B) — the Function never ran, so it's falling back to defaults, or KV is genuinely empty in that local session |
+
+---
+
+## 11. Customer accounts (login/logout, cross-device sync)
+
+Separate from the admin system above — this is for *shoppers*, so they can log in and have their wishlist/cart follow them between devices. Checkout is still WhatsApp-only for now; this is just accounts + saved wishlist/cart, laying groundwork for a payment gateway later without blocking on it.
+
+**What it uses:**
+- The **same `KK_KV` namespace** as the product catalog — customer accounts are stored under keys like `user:someone@email.com`, alongside `kk_catalog_v1`. No second KV namespace needed.
+- One **new** environment variable: `SESSION_SECRET` — signs the login session cookie. Anyone who has this value could forge a valid session, so treat it like a password, not a display string.
+- New Pages Functions: `functions/api/auth/signup.js`, `login.js`, `logout.js`, `me.js`, and `functions/api/account.js` (get/save wishlist+cart), plus a shared helper at `functions/_lib/session.js`.
+- New client file `assets/js/auth.js`, loaded on every page that already loads `cart.js`. It adds an account icon next to the cart icon in the header and a login/signup modal — no other page HTML was hand-edited for this.
+
+**Setup — one more environment variable, no new KV namespace:**
+
+1. Cloudflare dashboard → your Pages project → **Settings** → **Environment variables** → **Add variable**
+   - **Variable name**: `SESSION_SECRET`
+   - **Value**: any long random string (e.g. generate one with `openssl rand -hex 32` — don't reuse `ADMIN_PASSWORD` for this)
+   - Add it for **both** Production and Preview
+2. Redeploy (same rule as always — env vars only apply to deployments made after you save them)
+3. For local testing, add the same variable to your `.dev.vars` file:
+   ```
+   SESSION_SECRET=some-long-random-string-for-local-testing
+   ```
+
+**How the sync actually works:** when someone logs in (or a returning visit finds a valid session), whatever wishlist/cart is already saved to their account on the server gets **merged** with whatever's already in that browser — wishlist ids are unioned, cart lines with the same product/size/color have their quantities added together. Nothing a guest added gets silently wiped by logging in. The merged result is saved back to the server, so the next device that logs in sees everything. After that, any further wishlist/cart change while logged in is pushed to the server automatically (debounced ~800ms).
+
+**Passwords** are never stored in plain text — hashed with PBKDF2 (100,000 iterations) and a random salt per account, using the Web Crypto API already built into the Cloudflare Workers runtime (no extra library/dependency).
+
+| Symptom | Likely cause |
+|---|---|
+| Signup/login shows a 500 error mentioning `SESSION_SECRET` | The environment variable isn't set, or wasn't redeployed after adding |
+| Signup/login shows a 500 error mentioning `KK_KV` | Same binding used by the catalog — see section 7 if you haven't set that up yet |
+| Logged in on one device, but wishlist doesn't show up on another | Confirm you're logged into the *same* account (email) on both, and give the sync a second or two after the page loads |
+| Session logs out unexpectedly / can't stay logged in | `SESSION_SECRET` was changed (e.g. regenerated) — that invalidates every existing session cookie, which is expected, not a bug |

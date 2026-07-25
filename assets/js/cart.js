@@ -80,6 +80,7 @@
       writeJSON(CART_KEY, lines);
       renderCartDrawer();
       updateBadges();
+      if (window.KK_onAccountDataChange) window.KK_onAccountDataChange();
     },
     add(productId, size, color, qty) {
       const lines = this.getLines();
@@ -135,6 +136,7 @@
       renderWishlistDrawer();
       updateBadges();
       syncBookmarkButtons();
+      if (window.KK_onAccountDataChange) window.KK_onAccountDataChange();
     },
     has(productId) {
       return this.getIds().indexOf(productId) !== -1;
@@ -524,6 +526,30 @@
     },
     toggleSaved: function (productId) {
       Wishlist.toggle(productId);
+    },
+    // ---- Used by assets/js/auth.js for cross-device sync ----
+    getWishlistIds: function () {
+      return Wishlist.getIds();
+    },
+    getCartLines: function () {
+      return Cart.getLines();
+    },
+    // Replace local state wholesale (e.g. right after logging in, to
+    // pull down what was saved to this account from another device).
+    // Pass { silent: true } to skip the account-sync hook so this
+    // doesn't immediately PUT the same data straight back to the server.
+    replaceWishlist: function (ids, opts) {
+      writeJSON(WISHLIST_KEY, ids || []);
+      renderWishlistDrawer();
+      updateBadges();
+      syncBookmarkButtons();
+      if (!(opts && opts.silent) && window.KK_onAccountDataChange) window.KK_onAccountDataChange();
+    },
+    replaceCart: function (lines, opts) {
+      writeJSON(CART_KEY, lines || []);
+      renderCartDrawer();
+      updateBadges();
+      if (!(opts && opts.silent) && window.KK_onAccountDataChange) window.KK_onAccountDataChange();
     }
   };
 
