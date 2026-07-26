@@ -24,10 +24,11 @@
   <div class="noise-overlay" aria-hidden="true"></div>
   <div id="cursorDot" aria-hidden="true" style="position:fixed;width:8px;height:8px;background:#f58220;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,opacity 0.15s ease;"></div>
 
-  <main class="container py-5" style="margin-top: 134px;">
+  <main id="productDetailMain" class="container py-5" style="margin-top: 32px;">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <a href="services.html" class="text-decoration-none text-muted d-inline-flex align-items-center gap-2">
-        <span class="material-symbols-outlined">arrow_back</span> BACK TO COLLECTIONS
+      <a id="backToCategoryBtn" href="services.html" class="text-decoration-none text-white d-inline-flex align-items-center gap-2 opacity-75 opacity-100-hover" style="color: #fff !important; transition: opacity 0.2s;">
+        <span class="material-symbols-outlined" style="font-size: 20px; color: #fff;">arrow_back</span> 
+        <span id="backToCategoryText">BACK TO COLLECTIONS</span>
       </a>
       <div class="d-flex align-items-center gap-3">
         <button id="kkWishlistBtn" style="background:none;border:none;color:#fff;cursor:pointer;position:relative;" aria-label="Saved items">
@@ -51,8 +52,7 @@
       <div class="col-md-6 d-flex flex-column justify-content-between">
         <div>
           <div class="d-flex justify-content-between align-items-start">
-            <span class="text-uppercase tracking-widest text-muted small" id="productCategory">DROP COLLECTION</span>
-            <button id="productBookmarkBtn" class="kk-bookmark" style="position:static;" aria-label="Save for later">
+              <span id="productCategory" style="background-color: #f58220; color: #000; font-weight: 800; font-size: 0.7rem; padding: 4px 10px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-block;">DROP COLLECTION</span>              <button id="productBookmarkBtn" class="kk-bookmark" style="position:static;" aria-label="Save for later">
               <span class="material-symbols-outlined">bookmark_border</span>
             </button>
           </div>
@@ -88,6 +88,11 @@
         </div>
       </div>
     </div>
+
+    <div id="suggestedSection" class="mt-5 pt-4" style="border-top: 1px solid rgba(255,255,255,0.08); display:none;">
+      <h3 class="font-headline fw-black text-uppercase mb-3" style="font-size: 1.3rem;">You Might Also Like</h3>
+      <div class="row g-3" id="suggestedItems"></div>
+    </div>
   </main>
 
   <script src="assets/js/products-data.js"></script>
@@ -114,7 +119,7 @@
     function changeImage(element) {
       document.getElementById('mainProductImage').src = element.src;
       document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-      element.classList.add('active');
+      element.classList.add('active'); 
     }
 
     // The single build of this page. Runs exactly once, only once the
@@ -226,6 +231,55 @@
         refreshBookmarkIcon();
       });
       refreshBookmarkIcon();
+
+      renderSuggested(product);
+    }
+
+    // "You Might Also Like" — up to 4 other active products from the
+    // same category, same card look as the Collections grid. Falls
+    // back to other active products if this category doesn't have
+    // enough on its own, so the row is never left empty/half-full.
+    function renderSuggested(currentProduct) {
+      const section = document.getElementById('suggestedSection');
+      const row = document.getElementById('suggestedItems');
+      const all = window.KK_PRODUCTS || {};
+
+      const candidates = Object.keys(all)
+        .filter((id) => id !== productId && all[id].active !== false)
+        .map((id) => Object.assign({ id: id }, all[id]));
+
+      const sameCategory = candidates.filter((p) => p.category === currentProduct.category);
+      const others = candidates.filter((p) => p.category !== currentProduct.category);
+      const picks = sameCategory.concat(others).slice(0, 4);
+
+      if (picks.length === 0) return;
+
+      row.innerHTML = picks.map(function (p) {
+        const img = (p.images && p.images[0]) || '';
+        const name = (p.title || '').toUpperCase();
+        return (
+          '<div class="col-6 col-md-3">' +
+            '<div class="product-card" style="min-width:0;">' +
+              '<div class="kk-card-media" style="position:relative;">' +
+                '<a href="product-detail.html?product=' + encodeURIComponent(p.id) + '" class="text-decoration-none">' +
+                  '<div class="product-card-image orange-glow-hover">' +
+                    '<img src="' + img + '" alt="' + name + '" loading="lazy" />' +
+                  '</div>' +
+                '</a>' +
+                '<button class="kk-bookmark" data-product-id="' + p.id + '" aria-label="Save for later"><span class="material-symbols-outlined">bookmark_border</span></button>' +
+              '</div>' +
+              '<div class="mt-2">' +
+                '<a href="product-detail.html?product=' + encodeURIComponent(p.id) + '" class="text-decoration-none">' +
+                  '<p class="product-card-name" style="font-size:0.9rem; color:#fff; margin-bottom:0;">' + name + '</p>' +
+                '</a>' +
+                '<span class="product-card-price" style="font-size:1rem;">' + '₹' + Number(p.price).toLocaleString('en-IN') + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+
+      section.style.display = '';
     }
 
     // stock-sync.js fires this once, after the live catalog (or the

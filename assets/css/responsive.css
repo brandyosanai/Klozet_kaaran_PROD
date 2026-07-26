@@ -149,6 +149,46 @@
 
   /* Nav */
   #main-nav { padding: 1rem; }
+
+  /* Quick-add "+" overlay button (New Drop runway cards + mood grid
+     tiles) sits directly on top of the product photo. On desktop,
+     hover already separates "I'm browsing this image" from "I'm
+     aiming at that small control", but phones have no hover — so a
+     normal tap meant to open the product was landing on this button
+     instead and popping open the quick-add card. Hiding it on phones
+     means any tap on the photo reliably opens the full product page;
+     sizes/colors/qty and Add to Cart are still one tap away there.
+     (Color Drop and Field Notes cards aren't touched — their
+     quick-add sits in its own row below the image, never overlapping
+     the tappable photo, so it was never the problem.) */
+  .kk-runway-card .kk-quick-add,
+  .kk-mood-tile .kk-quick-add,
+  .product-card .kk-quick-add {
+    display: none !important;
+  }
+
+  /* ─── Product detail page ───
+     This page never had a fixed nav of its own, so the 134px
+     inline margin-top on <main> (sized to clear a navbar that
+     isn't actually on this page) was pure dead space pushing the
+     product below the fold. Tightened here so the photo, price,
+     and Add to Cart button are visible with far less scrolling. */
+  #productDetailMain {
+    margin-top: 16px !important;
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+  }
+  #productDetailMain .row.g-5 {
+    --bs-gutter-y: 1rem;
+  }
+  #productDetailMain h1 {
+    font-size: 1.5rem !important;
+  }
+  #productDetailMain .mb-4 { margin-bottom: 0.85rem !important; }
+  #productDetailMain .mb-5 { margin-bottom: 1.25rem !important; }
+
+  /* Suggested items row */
+  #suggestedItems .product-card-name { font-size: 0.85rem !important; }
 }
 
 /* ─── Small phones (< 400px) ─── */
