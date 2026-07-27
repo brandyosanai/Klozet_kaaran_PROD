@@ -19,7 +19,8 @@
        physically scrolling. Triggered by the arrow, a dot, or a
        swipe — never by scroll position — so there's no "paging"
        feel, just one clean transition at a time. */
-    .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; touch-action: pan-y; }
+    .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; touch-action: pan-y; cursor: grab; }
+    .product-gallery:active { cursor: grabbing; }
     .product-gallery-slide {
       position: absolute; inset: 0;
       opacity: 0;
@@ -35,6 +36,7 @@
     .product-gallery-slide img {
       width: 100%; height: 100%; display: block; object-fit: cover;
       backface-visibility: hidden;
+      -webkit-user-drag: none; user-select: none; -webkit-user-select: none;
     }
     @media (prefers-reduced-motion: reduce) {
       .product-gallery-slide { transition: opacity 0.2s linear; transform: none !important; }
@@ -233,23 +235,30 @@
       goToImage(galleryIndex + 1); // wraps to the first image after the last
     });
 
-    // Mobile swipe — left/right only. We only read the start/end touch
-    // point (no preventDefault, no touchmove work), so vertical page
-    // scrolling is completely unaffected and every listener stays passive.
+    // Swipe / drag — left/right, works the same way for a finger
+    // (touch), a mouse click-drag, or a trackpad gesture, since Pointer
+    // Events unify all three. We only read the down/up position (no
+    // pointermove work, no preventDefault), so this stays lightweight
+    // and never blocks vertical page scrolling.
     (function setupSwipe() {
       const gallery = document.getElementById('productGallery');
-      let startX = 0, startY = 0;
-      gallery.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
+      let startX = 0, startY = 0, tracking = false;
+      gallery.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return; // ignore right/middle click-drag
+        tracking = true;
+        startX = e.clientX;
+        startY = e.clientY;
       }, { passive: true });
-      gallery.addEventListener('touchend', (e) => {
-        const dx = e.changedTouches[0].clientX - startX;
-        const dy = e.changedTouches[0].clientY - startY;
+      gallery.addEventListener('pointerup', (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
         if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
-          goToImage(galleryIndex + (dx < 0 ? 1 : -1)); // swipe left -> next, right -> previous
+          goToImage(galleryIndex + (dx < 0 ? 1 : -1)); // swipe/drag left -> next, right -> previous
         }
       }, { passive: true });
+      gallery.addEventListener('pointercancel', () => { tracking = false; }, { passive: true });
     })();
 
     // The single build of this page. Runs exactly once, only once the
@@ -283,7 +292,7 @@
       const track = document.getElementById('productGalleryTrack');
       track.innerHTML = images.map((imgSrc, index) =>
         '<div class="product-gallery-slide' + (index === 0 ? ' active' : '') + '">' +
-          '<img src="' + imgSrc + '" alt="' + product.title + '" ' +
+          '<img src="' + imgSrc + '" alt="' + product.title + '" draggable="false" ' +
             'loading="' + (index === 0 ? 'eager' : 'lazy') + '" decoding="async" />' +
         '</div>'
       ).join('');
