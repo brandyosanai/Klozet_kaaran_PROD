@@ -235,11 +235,9 @@
       goToImage(galleryIndex + 1); // wraps to the first image after the last
     });
 
-    // Swipe / drag — left/right, works the same way for a finger
-    // (touch), a mouse click-drag, or a trackpad gesture, since Pointer
-    // Events unify all three. We only read the down/up position (no
-    // pointermove work, no preventDefault), so this stays lightweight
-    // and never blocks vertical page scrolling.
+    // Click-and-drag swipe (mouse or touch) — Pointer Events unify
+    // both. We only read the down/up position (no pointermove work,
+    // no preventDefault), so this stays lightweight.
     (function setupSwipe() {
       const gallery = document.getElementById('productGallery');
       let startX = 0, startY = 0, tracking = false;
@@ -259,6 +257,40 @@
         }
       }, { passive: true });
       gallery.addEventListener('pointercancel', () => { tracking = false; }, { passive: true });
+    })();
+
+    // Trackpad swipe (Mac two-finger swipe, any direction) and mouse
+    // wheel — these arrive as native "wheel" events, completely
+    // separate from the drag handling above. We capture the gesture
+    // over the image (preventDefault) so it moves between product
+    // photos instead of scrolling the page or triggering the
+    // browser's pinch-to-zoom, and a short cooldown means one swipe
+    // gesture (which fires many wheel events in quick succession)
+    // advances exactly one image instead of flying through several.
+    (function setupWheelSwipe() {
+      const gallery = document.getElementById('productGallery');
+      let cooling = false;
+      const COOLDOWN_MS = 650;
+      const THRESHOLD = 10;
+
+      gallery.addEventListener('wheel', (e) => {
+        e.preventDefault(); // this zone controls the gallery, not page scroll/zoom
+        if (cooling || e.ctrlKey) return; // ctrlKey = pinch-zoom gesture; ignore, don't navigate
+
+        const absX = Math.abs(e.deltaX);
+        const absY = Math.abs(e.deltaY);
+        if (Math.max(absX, absY) < THRESHOLD) return; // filters trackpad noise/momentum tail
+
+        const dominant = absX > absY ? e.deltaX : e.deltaY;
+        goToImage(galleryIndex + (dominant > 0 ? 1 : -1));
+
+        cooling = true;
+        setTimeout(() => { cooling = false; }, prefersReducedMotion ? 150 : COOLDOWN_MS);
+      }, { passive: false });
+
+      // Safari fires these for a genuine pinch gesture (not covered by
+      // ctrlKey+wheel there) — block so pinch never zooms the page.
+      gallery.addEventListener('gesturestart', (e) => e.preventDefault());
     })();
 
     // The single build of this page. Runs exactly once, only once the
