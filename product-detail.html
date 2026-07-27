@@ -13,7 +13,38 @@
   <link rel="stylesheet" href="assets/css/responsive.css" />
   <style>
     .product-main-img { width: 100%; height: auto; background: var(--color-surface); object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
-    .thumb-img { width: 100%; height: 80px; object-fit: cover; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+
+    /* Main image slide track — one full-width slide per image, moved
+       with a transform transition instead of swapping src, so
+       changing images is a smooth slide rather than an instant cut. */
+    .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; }
+    .product-gallery-track { display: flex; height: 100%; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+    .product-gallery-slide { flex: 0 0 100%; width: 100%; height: 100%; }
+    .product-gallery-slide img { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+    .gallery-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: rgba(0,0,0,0.55); color: #fff; display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      transition: background 0.2s, opacity 0.2s; z-index: 5;
+    }
+    .gallery-arrow:hover { background: var(--color-primary); color: #000; }
+    .gallery-arrow-left { left: 12px; }
+    .gallery-arrow-right { right: 12px; }
+    .gallery-arrow[disabled] { opacity: 0; pointer-events: none; }
+
+    /* Thumbnail filmstrip — horizontally scrollable with smooth,
+       native momentum scroll; the active thumb scrolls into view
+       automatically when you use the arrows. */
+    .thumb-strip {
+      display: flex; gap: 8px; overflow-x: auto; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+    .thumb-strip::-webkit-scrollbar { height: 5px; }
+    .thumb-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+    .thumb-img { flex: 0 0 64px; width: 64px; height: 80px; object-fit: cover; cursor: pointer; opacity: 0.5; transition: opacity 0.2s; border: 1px solid rgba(255,255,255,0.05); }
     .thumb-img.active, .thumb-img:hover { opacity: 1; border-color: var(--color-primary); }
     .size-btn { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); font-weight: 600; padding: 0.5rem 1.25rem; transition: all 0.2s; }
     .size-btn.active, .size-btn:hover { background: #fff; color: #000; border-color: #fff; }
@@ -44,9 +75,16 @@
 
     <div class="row g-5">
       <div class="col-md-6">
-        <img id="mainProductImage" src="" alt="Product view" class="product-main-img mb-3" />
-        <div class="row g-2" id="thumbnailRow">
-          </div>
+        <div class="product-gallery mb-3">
+          <div class="product-gallery-track" id="productGalleryTrack"></div>
+          <button class="gallery-arrow gallery-arrow-left" id="galleryPrevBtn" aria-label="Previous image">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button class="gallery-arrow gallery-arrow-right" id="galleryNextBtn" aria-label="Next image">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+        <div class="thumb-strip" id="thumbnailRow"></div>
       </div>
 
       <div class="col-md-6 d-flex flex-column justify-content-between">
@@ -115,12 +153,42 @@
       if (addBtn) { addBtn.disabled = true; addBtn.style.opacity = '0.4'; addBtn.style.pointerEvents = 'none'; }
     }
 
-    // Thumbnail swap handler (called from inline onclick on generated thumbs)
-    function changeImage(element) {
-      document.getElementById('mainProductImage').src = element.src;
-      document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-      element.classList.add('active'); 
+    // ─── Image gallery state ───
+    let galleryImages = [];
+    let galleryIndex = 0;
+
+    function updateGalleryUI() {
+      const track = document.getElementById('productGalleryTrack');
+      track.style.transform = 'translateX(-' + (galleryIndex * 100) + '%)';
+
+      document.querySelectorAll('.thumb-img').forEach((img, i) => {
+        img.classList.toggle('active', i === galleryIndex);
+      });
+      const activeThumb = document.querySelector('.thumb-img.active');
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+
+      const prevBtn = document.getElementById('galleryPrevBtn');
+      const nextBtn = document.getElementById('galleryNextBtn');
+      const multiple = galleryImages.length > 1;
+      prevBtn.disabled = !multiple;
+      nextBtn.disabled = !multiple;
     }
+
+    function goToImage(index) {
+      if (!galleryImages.length) return;
+      galleryIndex = (index + galleryImages.length) % galleryImages.length; // wraps both directions
+      updateGalleryUI();
+    }
+
+    // Thumbnail click handler (called from inline onclick on generated thumbs)
+    function changeImage(index) {
+      goToImage(index);
+    }
+
+    document.getElementById('galleryPrevBtn').addEventListener('click', () => goToImage(galleryIndex - 1));
+    document.getElementById('galleryNextBtn').addEventListener('click', () => goToImage(galleryIndex + 1));
 
     // The single build of this page. Runs exactly once, only once the
     // live catalog (assets/js/stock-sync.js) has resolved — so this
@@ -142,18 +210,24 @@
       document.getElementById('productCategory').innerText = product.category;
       document.getElementById('productDesc').innerText = product.desc;
 
-      // Main image + thumbnail gallery — supports any number of images
-      // (3–10 typical). images[0] is always the main/default photo.
+      // Main image slide track + thumbnail filmstrip — supports any
+      // number of images (3–10 typical); today's data has 1, and the
+      // arrows/thumbs simply stay inactive until more are uploaded.
       const images = (product.images && product.images.length) ? product.images : [];
-      document.getElementById('mainProductImage').src = images[0] || '';
+      galleryImages = images;
+      galleryIndex = 0;
+
+      const track = document.getElementById('productGalleryTrack');
+      track.innerHTML = images.map((imgSrc) =>
+        '<div class="product-gallery-slide"><img src="' + imgSrc + '" alt="' + product.title + '" /></div>'
+      ).join('');
+
       const thumbRow = document.getElementById('thumbnailRow');
-      thumbRow.innerHTML = '';
-      images.forEach((imgSrc, index) => {
-        const col = document.createElement('div');
-        col.className = 'col-3';
-        col.innerHTML = `<img src="${imgSrc}" class="thumb-img ${index === 0 ? 'active' : ''}" onclick="changeImage(this)" />`;
-        thumbRow.appendChild(col);
-      });
+      thumbRow.innerHTML = images.map((imgSrc, index) =>
+        '<img src="' + imgSrc + '" class="thumb-img' + (index === 0 ? ' active' : '') + '" onclick="changeImage(' + index + ')" />'
+      ).join('');
+
+      updateGalleryUI();
 
       // Size buttons — built from this product's own size list
       const sizeContainer = document.getElementById('sizeContainer');
