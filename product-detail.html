@@ -14,33 +14,45 @@
   <style>
     .product-main-img { width: 100%; height: auto; background: var(--color-surface); object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
 
-    /* Main gallery — native vertical scroll with CSS scroll-snap.
-       Letting the browser own the scrolling (rather than driving it
-       with JS/transforms) is what gives the buttery, hardware-
-       accelerated, no-jitter feel on both mouse wheel and touch, with
-       zero scroll-locking: we never call preventDefault on a touch or
-       wheel event here. */
-    .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; }
-    .product-gallery-scroll {
-      height: 100%; width: 100%; overflow-y: auto;
-      scroll-snap-type: y mandatory;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain; /* stops scroll from chaining into the page and causing bounce/glitches */
-    }
+    /* Main gallery — images are stacked and crossfade between each
+       other (opacity + a slight scale), rather than the page/track
+       physically scrolling. Triggered by the arrow, a dot, or a
+       swipe — never by scroll position — so there's no "paging"
+       feel, just one clean transition at a time. */
+    .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; touch-action: pan-y; }
     .product-gallery-slide {
-      height: 100%; width: 100%;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
+      position: absolute; inset: 0;
+      opacity: 0;
+      transform: translateZ(0) scale(1.015);
+      transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+    .product-gallery-slide.active {
+      opacity: 1;
+      transform: translateZ(0) scale(1);
+      pointer-events: auto;
     }
     .product-gallery-slide img {
       width: 100%; height: 100%; display: block; object-fit: cover;
-      transform: translateZ(0); /* hints GPU compositing for the image paint */
       backface-visibility: hidden;
     }
     @media (prefers-reduced-motion: reduce) {
-      .product-gallery-scroll { scroll-behavior: auto; }
+      .product-gallery-slide { transition: opacity 0.2s linear; transform: none !important; }
     }
+
+    /* Left-side dot indicators, layered over the image. */
+    .gallery-dots {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 9px; z-index: 5;
+    }
+    .gallery-dot {
+      width: 7px; height: 7px; border-radius: 50%; padding: 0;
+      border: 1.5px solid rgba(255,255,255,0.55); background: transparent;
+      cursor: pointer; transition: all 0.25s ease;
+    }
+    .gallery-dot:hover { border-color: #fff; }
+    .gallery-dot.active { background: #fff; border-color: #fff; }
+    .gallery-dot:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 
     /* Bottom-right floating "next image" control — minimal glass pill. */
     .gallery-nav-arrow {
@@ -104,8 +116,9 @@
 
     <div class="row g-5">
       <div class="col-md-6">
-        <div class="product-gallery mb-3">
-          <div class="product-gallery-scroll" id="productGalleryScroll"></div>
+        <div class="product-gallery mb-3" id="productGallery">
+          <div id="productGalleryTrack"></div>
+          <div class="gallery-dots" id="galleryDots"></div>
           <button class="gallery-nav-arrow" id="galleryNextBtn" aria-label="View next product image" hidden>
             <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
           </button>
@@ -180,17 +193,22 @@
     }
 
     // ─── Image gallery state ───
-    // The gallery scrolls natively (CSS scroll-snap) for buttery
-    // wheel/touch scrolling with zero JS in the scroll path. JS only
-    // needs to know which slide is currently in view (via
-    // IntersectionObserver — no scroll listener, so no per-frame JS
-    // work at all) and to drive the "next" button + thumbnail sync.
+    // Images crossfade in place (opacity/scale transition on whichever
+    // slide is .active) instead of the container physically scrolling —
+    // that's the "smooth transition, not a scrolling page" behaviour.
+    // Navigation comes from three inputs only: the arrow, a dot, or a
+    // swipe — index changes never happen from a scroll position.
     let galleryImages = [];
     let galleryIndex = 0;
-    let galleryObserver = null;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function syncThumbnail() {
+    function updateGalleryUI() {
+      document.querySelectorAll('.product-gallery-slide').forEach((slide, i) => {
+        slide.classList.toggle('active', i === galleryIndex);
+      });
+      document.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === galleryIndex);
+      });
       document.querySelectorAll('.thumb-img').forEach((img, i) => {
         img.classList.toggle('active', i === galleryIndex);
       });
@@ -201,11 +219,9 @@
     }
 
     function goToImage(index) {
-      const scroller = document.getElementById('productGalleryScroll');
-      const slides = scroller.querySelectorAll('.product-gallery-slide');
-      if (!slides.length) return;
-      const target = (index + slides.length) % slides.length; // loops both directions
-      slides[target].scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+      if (!galleryImages.length) return;
+      galleryIndex = (index + galleryImages.length) % galleryImages.length; // loops both directions
+      updateGalleryUI();
     }
 
     // Thumbnail click handler (called from inline onclick on generated thumbs)
@@ -217,30 +233,24 @@
       goToImage(galleryIndex + 1); // wraps to the first image after the last
     });
 
-    function setupGalleryObserver() {
-      const scroller = document.getElementById('productGalleryScroll');
-      const nextBtn = document.getElementById('galleryNextBtn');
-      if (galleryObserver) galleryObserver.disconnect();
-
-      nextBtn.hidden = galleryImages.length <= 1;
-      if (galleryImages.length <= 1) return;
-
-      galleryObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const idx = Number(entry.target.getAttribute('data-index'));
-              if (!Number.isNaN(idx) && idx !== galleryIndex) {
-                galleryIndex = idx;
-                syncThumbnail();
-              }
-            }
-          });
-        },
-        { root: scroller, threshold: 0.6 }
-      );
-      scroller.querySelectorAll('.product-gallery-slide').forEach((slide) => galleryObserver.observe(slide));
-    }
+    // Mobile swipe — left/right only. We only read the start/end touch
+    // point (no preventDefault, no touchmove work), so vertical page
+    // scrolling is completely unaffected and every listener stays passive.
+    (function setupSwipe() {
+      const gallery = document.getElementById('productGallery');
+      let startX = 0, startY = 0;
+      gallery.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      gallery.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          goToImage(galleryIndex + (dx < 0 ? 1 : -1)); // swipe left -> next, right -> previous
+        }
+      }, { passive: true });
+    })();
 
     // The single build of this page. Runs exactly once, only once the
     // live catalog (assets/js/stock-sync.js) has resolved — so this
@@ -263,28 +273,32 @@
       document.getElementById('productDesc').innerText = product.desc;
 
       // Main image gallery + thumbnail filmstrip — supports any number
-      // of images (3–10 typical); today's data has 1, so the arrow
-      // stays hidden until more are uploaded. First image loads eager
-      // (it's above the fold), the rest stay lazy.
+      // of images (3–10 typical); today's data has 1, so the arrow and
+      // dots stay hidden until more are uploaded. First image loads
+      // eager (it's above the fold), the rest stay lazy.
       const images = (product.images && product.images.length) ? product.images : [];
       galleryImages = images;
       galleryIndex = 0;
 
-      const scroller = document.getElementById('productGalleryScroll');
-      scroller.innerHTML = images.map((imgSrc, index) =>
-        '<div class="product-gallery-slide" data-index="' + index + '">' +
+      const track = document.getElementById('productGalleryTrack');
+      track.innerHTML = images.map((imgSrc, index) =>
+        '<div class="product-gallery-slide' + (index === 0 ? ' active' : '') + '">' +
           '<img src="' + imgSrc + '" alt="' + product.title + '" ' +
             'loading="' + (index === 0 ? 'eager' : 'lazy') + '" decoding="async" />' +
         '</div>'
       ).join('');
-      scroller.scrollTop = 0;
+
+      const dotsRow = document.getElementById('galleryDots');
+      dotsRow.innerHTML = images.length > 1 ? images.map((_, index) =>
+        '<button class="gallery-dot' + (index === 0 ? ' active' : '') + '" aria-label="View image ' + (index + 1) + '" onclick="changeImage(' + index + ')"></button>'
+      ).join('') : '';
 
       const thumbRow = document.getElementById('thumbnailRow');
       thumbRow.innerHTML = images.map((imgSrc, index) =>
         '<img src="' + imgSrc + '" class="thumb-img' + (index === 0 ? ' active' : '') + '" onclick="changeImage(' + index + ')" />'
       ).join('');
 
-      setupGalleryObserver();
+      document.getElementById('galleryNextBtn').hidden = images.length <= 1;
 
       // Size buttons — built from this product's own size list
       const sizeContainer = document.getElementById('sizeContainer');
