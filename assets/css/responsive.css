@@ -96,6 +96,32 @@
   /* Contact form panel */
   .contact-form-panel { padding: 2rem; }
   .contact-form-glow { display: none; }
+
+  /* Explore Collections cards (hero orbit) — on mobile this becomes a
+     horizontal swipeable row (see the base @media (max-width: 991px)
+     block in style.css for that layout switch). It sits directly
+     under .hero-section rather than inside .container/.px-site like
+     the rest of the hero, so it had no side padding and the first
+     card butted right up against the screen edge while the headline
+     above/below it was indented — this lines it up with everything
+     else. scroll-padding-left keeps that same gap when the row is
+     scrolled, so a snapped card never sits flush against the edge. */
+  .hero-orbit {
+    padding-left: var(--margin-mobile);
+    padding-right: var(--margin-mobile);
+    scroll-padding-left: var(--margin-mobile);
+  }
+
+  /* Touch "lift" feedback — there's no :hover on a phone, so give a
+     tactile press response instead: the card lifts with a stronger
+     shadow/glow while held, and settles back on release (the card's
+     own default transition handles the settle, this just overrides
+     it to be snappier on press-down). */
+  .hero-orbit-item:active .hero-orbit-card {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 28px 48px rgba(0,0,0,0.55), 0 0 34px var(--deck-glow);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
 }
 
 /* ─── Mobile (< 768px) ─── */
