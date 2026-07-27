@@ -1750,8 +1750,8 @@ a { text-decoration: none; }
   right: 8%;
   transform: translateY(-50%);
   z-index: 30;
-  width: 520px;
-  max-width: 44vw;
+  width: 580px;
+  max-width: 46vw;
 }
 .hero-orbit-label {
   font-size: 11px;
@@ -1765,7 +1765,7 @@ a { text-decoration: none; }
 
 .hero-orbit {
   position: relative;
-  height: 420px;
+  height: 460px;
 }
 
 /* Soft glow anchoring the orbit visually — the "hub" everything
@@ -1774,8 +1774,8 @@ a { text-decoration: none; }
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 260px;
-  height: 260px;
+  width: 300px;
+  height: 300px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(245,130,32,0.16) 0%, transparent 70%);
@@ -1787,9 +1787,9 @@ a { text-decoration: none; }
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 190px;
-  margin-left: -95px;
-  margin-top: -125px;
+  width: 224px;
+  margin-left: -112px;
+  margin-top: -150px;
   text-decoration: none;
   --deck-color: var(--color-primary);
   --deck-glow: rgba(245, 130, 32, 0.35);
@@ -1807,17 +1807,17 @@ a { text-decoration: none; }
    in the cycle, so they're always evenly spaced around the orbit. */
 @keyframes kk-orbit-cycle {
   0%, 100% {
-    transform: translate(0, 120px) scale(1);
+    transform: translate(0, 130px) scale(1);
     opacity: 1;
     z-index: 3;
   }
   33.33% {
-    transform: translate(-150px, -70px) scale(0.68);
+    transform: translate(-175px, -80px) scale(0.68);
     opacity: 0.55;
     z-index: 1;
   }
   66.66% {
-    transform: translate(150px, -70px) scale(0.68);
+    transform: translate(175px, -80px) scale(0.68);
     opacity: 0.55;
     z-index: 1;
   }
@@ -1830,7 +1830,7 @@ a { text-decoration: none; }
 
 .hero-orbit-card {
   position: relative;
-  height: 250px;
+  height: 300px;
   border-radius: 8px;
   overflow: hidden;
   border: 1.5px solid var(--deck-color);
@@ -1861,23 +1861,23 @@ a { text-decoration: none; }
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0.7rem 0.8rem;
+  padding: 0.85rem 1rem;
 }
 .hero-orbit-num {
   font-family: var(--font-headline);
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   color: var(--deck-color);
 }
-.hero-orbit-icon { font-size: 16px !important; color: rgba(255,255,255,0.5); }
+.hero-orbit-icon { font-size: 18px !important; color: rgba(255,255,255,0.5); }
 
 .hero-orbit-statement {
   position: relative;
   z-index: 2;
-  margin: 0.4rem 0.85rem 0;
+  margin: 0.5rem 1rem 0;
   font-family: var(--font-headline);
   font-weight: 900;
-  font-size: 1.3rem;
+  font-size: 1.55rem;
   line-height: 1;
   text-transform: uppercase;
   color: rgba(255,255,255,0.92);
@@ -1891,7 +1891,7 @@ a { text-decoration: none; }
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 0.85rem;
+  padding: 1rem;
   background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 75%);
 }
 .hero-orbit-name {
@@ -1904,14 +1904,14 @@ a { text-decoration: none; }
   line-height: 1.2;
 }
 .hero-orbit-tag {
-  font-size: 10px;
+  font-size: 11px;
   color: rgba(255,255,255,0.55);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 2px 0 0;
 }
 .hero-orbit-bottom .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 20px;
   color: var(--deck-color);
   transition: transform 0.3s ease;
 }
@@ -1932,9 +1932,9 @@ a { text-decoration: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-orbit-item { animation: none; }
-  .hero-orbit-item--rust  { transform: translate(-190px, 0); opacity: 1; }
+  .hero-orbit-item--rust  { transform: translate(-230px, 0); opacity: 1; }
   .hero-orbit-item--steel { transform: translate(0, 0); opacity: 1; }
-  .hero-orbit-item--gold  { transform: translate(190px, 0); opacity: 1; }
+  .hero-orbit-item--gold  { transform: translate(230px, 0); opacity: 1; }
 }
 
 /* Mobile: an orbit has no room to breathe on a phone screen, so it
