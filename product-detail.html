@@ -14,25 +14,54 @@
   <style>
     .product-main-img { width: 100%; height: auto; background: var(--color-surface); object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
 
-    /* Main image slide track — one full-width slide per image, moved
-       with a transform transition instead of swapping src, so
-       changing images is a smooth slide rather than an instant cut. */
+    /* Main gallery — native vertical scroll with CSS scroll-snap.
+       Letting the browser own the scrolling (rather than driving it
+       with JS/transforms) is what gives the buttery, hardware-
+       accelerated, no-jitter feel on both mouse wheel and touch, with
+       zero scroll-locking: we never call preventDefault on a touch or
+       wheel event here. */
     .product-gallery { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); background: var(--color-surface); aspect-ratio: 3 / 4; }
-    .product-gallery-track { display: flex; height: 100%; transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
-    .product-gallery-slide { flex: 0 0 100%; width: 100%; height: 100%; }
-    .product-gallery-slide img { width: 100%; height: 100%; display: block; object-fit: cover; }
-
-    .gallery-arrow {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: rgba(0,0,0,0.55); color: #fff; display: flex;
-      align-items: center; justify-content: center; cursor: pointer;
-      transition: background 0.2s, opacity 0.2s; z-index: 5;
+    .product-gallery-scroll {
+      height: 100%; width: 100%; overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain; /* stops scroll from chaining into the page and causing bounce/glitches */
     }
-    .gallery-arrow:hover { background: var(--color-primary); color: #000; }
-    .gallery-arrow-left { left: 12px; }
-    .gallery-arrow-right { right: 12px; }
-    .gallery-arrow[disabled] { opacity: 0; pointer-events: none; }
+    .product-gallery-slide {
+      height: 100%; width: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+    .product-gallery-slide img {
+      width: 100%; height: 100%; display: block; object-fit: cover;
+      transform: translateZ(0); /* hints GPU compositing for the image paint */
+      backface-visibility: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .product-gallery-scroll { scroll-behavior: auto; }
+    }
+
+    /* Bottom-right floating "next image" control — minimal glass pill. */
+    .gallery-nav-arrow {
+      position: absolute; right: 14px; bottom: 14px; z-index: 5;
+      width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(20,20,20,0.4);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      opacity: 0.85; transform: translateZ(0) scale(1);
+      transition: transform 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+    }
+    .gallery-nav-arrow .material-symbols-outlined { font-size: 20px; }
+    .gallery-nav-arrow:hover { opacity: 1; transform: scale(1.08); background: rgba(245,130,32,0.85); }
+    .gallery-nav-arrow:active { transform: scale(0.94); }
+    .gallery-nav-arrow:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+    .gallery-nav-arrow[hidden] { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-nav-arrow { transition: opacity 0.25s ease; }
+      .gallery-nav-arrow:hover, .gallery-nav-arrow:active { transform: none; }
+    }
 
     /* Thumbnail filmstrip — horizontally scrollable with smooth,
        native momentum scroll; the active thumb scrolls into view
@@ -76,12 +105,9 @@
     <div class="row g-5">
       <div class="col-md-6">
         <div class="product-gallery mb-3">
-          <div class="product-gallery-track" id="productGalleryTrack"></div>
-          <button class="gallery-arrow gallery-arrow-left" id="galleryPrevBtn" aria-label="Previous image">
-            <span class="material-symbols-outlined">chevron_left</span>
-          </button>
-          <button class="gallery-arrow gallery-arrow-right" id="galleryNextBtn" aria-label="Next image">
-            <span class="material-symbols-outlined">chevron_right</span>
+          <div class="product-gallery-scroll" id="productGalleryScroll"></div>
+          <button class="gallery-nav-arrow" id="galleryNextBtn" aria-label="View next product image" hidden>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
           </button>
         </div>
         <div class="thumb-strip" id="thumbnailRow"></div>
@@ -154,32 +180,32 @@
     }
 
     // ─── Image gallery state ───
+    // The gallery scrolls natively (CSS scroll-snap) for buttery
+    // wheel/touch scrolling with zero JS in the scroll path. JS only
+    // needs to know which slide is currently in view (via
+    // IntersectionObserver — no scroll listener, so no per-frame JS
+    // work at all) and to drive the "next" button + thumbnail sync.
     let galleryImages = [];
     let galleryIndex = 0;
+    let galleryObserver = null;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function updateGalleryUI() {
-      const track = document.getElementById('productGalleryTrack');
-      track.style.transform = 'translateX(-' + (galleryIndex * 100) + '%)';
-
+    function syncThumbnail() {
       document.querySelectorAll('.thumb-img').forEach((img, i) => {
         img.classList.toggle('active', i === galleryIndex);
       });
       const activeThumb = document.querySelector('.thumb-img.active');
       if (activeThumb) {
-        activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        activeThumb.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
       }
-
-      const prevBtn = document.getElementById('galleryPrevBtn');
-      const nextBtn = document.getElementById('galleryNextBtn');
-      const multiple = galleryImages.length > 1;
-      prevBtn.disabled = !multiple;
-      nextBtn.disabled = !multiple;
     }
 
     function goToImage(index) {
-      if (!galleryImages.length) return;
-      galleryIndex = (index + galleryImages.length) % galleryImages.length; // wraps both directions
-      updateGalleryUI();
+      const scroller = document.getElementById('productGalleryScroll');
+      const slides = scroller.querySelectorAll('.product-gallery-slide');
+      if (!slides.length) return;
+      const target = (index + slides.length) % slides.length; // loops both directions
+      slides[target].scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
     }
 
     // Thumbnail click handler (called from inline onclick on generated thumbs)
@@ -187,8 +213,34 @@
       goToImage(index);
     }
 
-    document.getElementById('galleryPrevBtn').addEventListener('click', () => goToImage(galleryIndex - 1));
-    document.getElementById('galleryNextBtn').addEventListener('click', () => goToImage(galleryIndex + 1));
+    document.getElementById('galleryNextBtn').addEventListener('click', () => {
+      goToImage(galleryIndex + 1); // wraps to the first image after the last
+    });
+
+    function setupGalleryObserver() {
+      const scroller = document.getElementById('productGalleryScroll');
+      const nextBtn = document.getElementById('galleryNextBtn');
+      if (galleryObserver) galleryObserver.disconnect();
+
+      nextBtn.hidden = galleryImages.length <= 1;
+      if (galleryImages.length <= 1) return;
+
+      galleryObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const idx = Number(entry.target.getAttribute('data-index'));
+              if (!Number.isNaN(idx) && idx !== galleryIndex) {
+                galleryIndex = idx;
+                syncThumbnail();
+              }
+            }
+          });
+        },
+        { root: scroller, threshold: 0.6 }
+      );
+      scroller.querySelectorAll('.product-gallery-slide').forEach((slide) => galleryObserver.observe(slide));
+    }
 
     // The single build of this page. Runs exactly once, only once the
     // live catalog (assets/js/stock-sync.js) has resolved — so this
@@ -210,24 +262,29 @@
       document.getElementById('productCategory').innerText = product.category;
       document.getElementById('productDesc').innerText = product.desc;
 
-      // Main image slide track + thumbnail filmstrip — supports any
-      // number of images (3–10 typical); today's data has 1, and the
-      // arrows/thumbs simply stay inactive until more are uploaded.
+      // Main image gallery + thumbnail filmstrip — supports any number
+      // of images (3–10 typical); today's data has 1, so the arrow
+      // stays hidden until more are uploaded. First image loads eager
+      // (it's above the fold), the rest stay lazy.
       const images = (product.images && product.images.length) ? product.images : [];
       galleryImages = images;
       galleryIndex = 0;
 
-      const track = document.getElementById('productGalleryTrack');
-      track.innerHTML = images.map((imgSrc) =>
-        '<div class="product-gallery-slide"><img src="' + imgSrc + '" alt="' + product.title + '" /></div>'
+      const scroller = document.getElementById('productGalleryScroll');
+      scroller.innerHTML = images.map((imgSrc, index) =>
+        '<div class="product-gallery-slide" data-index="' + index + '">' +
+          '<img src="' + imgSrc + '" alt="' + product.title + '" ' +
+            'loading="' + (index === 0 ? 'eager' : 'lazy') + '" decoding="async" />' +
+        '</div>'
       ).join('');
+      scroller.scrollTop = 0;
 
       const thumbRow = document.getElementById('thumbnailRow');
       thumbRow.innerHTML = images.map((imgSrc, index) =>
         '<img src="' + imgSrc + '" class="thumb-img' + (index === 0 ? ' active' : '') + '" onclick="changeImage(' + index + ')" />'
       ).join('');
 
-      updateGalleryUI();
+      setupGalleryObserver();
 
       // Size buttons — built from this product's own size list
       const sizeContainer = document.getElementById('sizeContainer');
