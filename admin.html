@@ -59,6 +59,9 @@
   <p class="kk-admin-sub">Edits here update the live site — Home and Collections pull from this data. Nothing goes live until you click "Save Changes".</p>
 
   <p id="kkAdminMsg" class="kk-admin-msg"></p>
+  <p id="kkDirtyBanner" class="kk-admin-msg" style="display:none; background:rgba(245,130,32,0.15); border:1px solid var(--color-primary); color:#ffd8a8;">
+    ⚠ You have unsaved changes — click <strong>Save Changes</strong> above to make them live. Adding/editing a product only stages it here until you do.
+  </p>
 
   <div class="kk-admin-card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -162,6 +165,27 @@
     el.className = "kk-admin-msg " + kind;
   }
 
+  // Tracks whether anything has been added/edited/removed since the
+  // last successful Save — this is what drives the "unsaved changes"
+  // banner and the leave-page warning below. "Add to list" (and every
+  // inline edit) only changes the local `catalog` object; nothing
+  // reaches the live site until Save Changes actually PUTs it — this
+  // makes that gap visible instead of silent.
+  let dirty = false;
+  function markDirty() {
+    dirty = true;
+    document.getElementById("kkDirtyBanner").style.display = "block";
+  }
+  function clearDirty() {
+    dirty = false;
+    document.getElementById("kkDirtyBanner").style.display = "none";
+  }
+  window.addEventListener("beforeunload", function (e) {
+    if (!dirty) return;
+    e.preventDefault();
+    e.returnValue = ""; // required for Chrome to show the confirmation prompt
+  });
+
   async function loadCatalog() {
     let live = null;
     try {
@@ -243,6 +267,7 @@
           } else {
             catalog[id][field] = input.value;
           }
+          markDirty();
         });
       });
 
@@ -256,6 +281,7 @@
         if (!confirm('Remove "' + catalog[id].title + '" from the catalog? This takes effect after Save Changes.')) return;
         delete catalog[id];
         expandedImageRows.delete(id);
+        markDirty();
         renderRows();
       });
     });
@@ -305,6 +331,7 @@
         rowEl.querySelector('[data-role="url"]').addEventListener("change", function (e) {
           const converted = convertDriveLink(e.target.value);
           catalog[id].images[idx] = converted;
+          markDirty();
           renderRows();
         });
 
@@ -312,6 +339,7 @@
         if (upBtn) upBtn.addEventListener("click", function () {
           const arr = catalog[id].images;
           [arr[idx - 1], arr[idx]] = [arr[idx], arr[idx - 1]];
+          markDirty();
           renderRows();
         });
 
@@ -319,17 +347,20 @@
         if (downBtn) downBtn.addEventListener("click", function () {
           const arr = catalog[id].images;
           [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]];
+          markDirty();
           renderRows();
         });
 
         rowEl.querySelector('[data-role="remove"]').addEventListener("click", function () {
           catalog[id].images.splice(idx, 1);
+          markDirty();
           renderRows();
         });
       });
 
       editorRow.querySelector('[data-role="add-one"]').addEventListener("click", function () {
         catalog[id].images.push("");
+        markDirty();
         renderRows();
       });
 
@@ -338,6 +369,7 @@
         const urls = textarea.value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
         urls.forEach(function (u) { catalog[id].images.push(convertDriveLink(u)); });
         textarea.value = "";
+        markDirty();
         renderRows();
       });
     });
@@ -361,6 +393,7 @@
         showMsg(msgEl, data.error || "Save failed.", "err");
       } else {
         showMsg(msgEl, "Saved — changes are now live on the site.", "ok");
+        clearDirty();
       }
     } catch (e) {
       showMsg(msgEl, "Network error while saving.", "err");
@@ -407,6 +440,7 @@
       form.style.display = "none";
       document.getElementById("kkNewTitle").value = "";
       document.getElementById("kkNewImages").value = "";
+      markDirty();
       renderRows();
     });
   }
