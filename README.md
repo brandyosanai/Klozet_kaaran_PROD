@@ -41,27 +41,40 @@ python3 -m http.server 8080
 ```
 Open `http://localhost:8080` in your browser. Fast, zero setup, but `/admin.html` won't be able to save anything (no Functions running).
 
-**Option B — Full local setup, including the admin panel + KV**
-```
-cd Klozet_kaaran_PROD
-wrangler pages dev . --kv KK_KV
-```
-This spins up a local server that also emulates Cloudflare Functions and gives you a **local, temporary** KV namespace (data doesn't persist between restarts unless you add `--persist-to`). Wrangler will print a local URL (typically `http://localhost:8788`) — open that instead of using a plain static server.
+### Option B — Full local setup (Admin Panel + Cloudflare KV)
 
-To persist local KV data between restarts:
-```
-wrangler pages dev . --kv KK_KV --persist-to .wrangler/state
-```
-(`.wrangler/` is already in `.gitignore`, so this never gets committed.)
+Run the project with Cloudflare Pages Functions and a persistent local KV namespace:
 
-**Setting the admin password locally**
-Create a `.env` file in the project root (already gitignored):
+```bash
+npx wrangler pages dev . --kv KK_KV --persist-to .wrangler/state
 ```
-ADMIN_PASSWORD=whatever-you-want-locally
-```
-Wrangler picks this up automatically for local runs. This is separate from the password you'll set on the live Cloudflare Pages project later — they don't need to match.
 
----
+### Compatibility Date
+
+Cloudflare Workers require a compatibility date. Create a `wrangler.toml` file in the project root if one doesn't already exist:
+
+```toml
+compatibility_date = "2026-07-29"
+```
+
+This only needs to be done once for the project. You do **not** need to pass `--compatibility-date` every time you run Wrangler.
+
+If you ever see an error like:
+
+```
+This Worker requires compatibility date "YYYY-MM-DD",
+but the newest date supported by this server binary is "YYYY-MM-DD"
+```
+
+simply update the `compatibility_date` in `wrangler.toml` to a date supported by your installed Wrangler runtime, or update Wrangler to the latest version.
+
+Wrangler will typically start the local server at:
+
+```
+http://localhost:8788
+```
+
+Open that URL instead of using a static server.
 
 ## 4. Pushing to GitHub
 
@@ -204,3 +217,34 @@ Separate from the admin system above — this is for *shoppers*, so they can log
 | Signup/login shows a 500 error mentioning `KK_KV` | Same binding used by the catalog — see section 7 if you haven't set that up yet |
 | Logged in on one device, but wishlist doesn't show up on another | Confirm you're logged into the *same* account (email) on both, and give the sync a second or two after the page loads |
 | Session logs out unexpectedly / can't stay logged in | `SESSION_SECRET` was changed (e.g. regenerated) — that invalidates every existing session cookie, which is expected, not a bug |
+
+## Troubleshooting
+
+### Compatibility Date Error
+
+**Error:**
+
+```
+This Worker requires compatibility date "...",
+but the newest date supported by this server binary is "..."
+```
+
+**Cause:**
+
+Cloudflare automatically uses today's compatibility date when one is not specified. Occasionally the bundled local Workers runtime (`workerd`) may not yet support today's date.
+
+**Fix:**
+
+Create (or edit) `wrangler.toml` in the project root:
+
+```toml
+compatibility_date = "2026-07-29"
+```
+
+Then run:
+
+```bash
+npx wrangler pages dev . --kv KK_KV --persist-to .wrangler/state
+```
+
+No additional flags are required after that.
